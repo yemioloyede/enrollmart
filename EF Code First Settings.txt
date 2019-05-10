@@ -1,0 +1,21 @@
+Create DBContextClass
+=======================
+    public class DBContext : DbContext
+    {
+        public DBContext(): base(System.Configuration.ConfigurationManager.AppSettings["ConnectionDB"])
+        {
+
+        }
+        public DbSet<Model.EntityName> EntityName { get; set; }
+     }
+
+
+Package Manager Console
+========================
+enable-migrations -ContextTypeName LinenShowCalculator.DBContext –EnableAutomaticMigration:$true
+
+
+App_Start/Startup.Auth.cs
+=========================
+Database.SetInitializer(new MigrateDatabaseToLatestVersion<DBContext, Migrations.Configuration>());
+
