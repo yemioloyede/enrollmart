@@ -1,0 +1,84 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.EmailCampaign>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class='page-title'>
+    <div class="right-buttons">
+        <a href="/Admin/AddEmailCampaign" class="btn btn-danger btn-xs">New Campaign</a>
+    </div>
+
+    <h1>Email Campaigns</h1>
+
+</div>
+@Html.RenderFlashMessages()
+
+@{
+    foreach (var item in Model)
+    {
+        <div class="content-box">
+            <div class="content-box-hdr" style="border-bottom:0px">
+                <div class="content-hdr-form">
+                    <span id="mainContent_filterfields" class="FilterBarControls">
+                        @item.Name
+                    </span>
+                    <div class="right-buttons" style="margin-bottom:8px">
+                        <a href="/Admin/EditEmailCampaign?id=@item.ProfileID" class="btn btn-danger btn-xs">Edit Campaign</a>
+                        <a href="/Admin/AddEmail?CampaignID=@item.ProfileID" class="btn btn-danger btn-xs">Add New Email</a>
+                    </div>
+                </div>
+                @{
+                    Context db = new EnrolTraining.Context();
+                    List<EnrolTraining.Models.CampaignTemplate> lstEmails = db.CampaignTemplate.Where(x => x.ProfileID == item.ProfileID).ToList();
+                    if (lstEmails != null && lstEmails.Count > 0)
+                    {
+                        <div style="padding:20px; background-color:white; padding-bottom:10px">
+                        <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-2">
+                                        Days to Send
+                                    </th>
+                                    <th class="col-md-9">
+                                        Subject Line
+                                    </th >
+                                    <th class="col-md-1">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @{
+
+                                    foreach (var record in lstEmails)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @record.ScheduleDays
+                                            </td>
+                                            <td>
+                                                @record.EmailSubject
+                                            </td>
+                                            <td>
+                                                <a href="/Admin/EditEmail?id=@record.EmailID"> <span class="fa fa-edit"></span> </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+
+                            </tbody>
+                        </table>
+                        </div>
+                  }
+                }
+
+            </div>
+
+
+        </div>
+    }
+
+}

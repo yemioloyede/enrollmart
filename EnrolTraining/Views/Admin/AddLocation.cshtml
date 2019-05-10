@@ -1,0 +1,132 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.Location
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class='page-title'>
+    <h1>Add/Edit Location</h1>
+</div>
+
+    <div class="FormWrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    @using (Html.BeginForm("AddLocation", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.RenderFlashMessages()
+                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                        @Html.Hidden("LocationID", Model == null ? 0 : Model.LocationID)
+
+                        {
+                            if (Model != null && Model.LocationID > 0)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.LocationID, new { @class = "col-md-4 control-label" })
+                                    <div class="col-md-8">
+                                        <label style="padding-top:7px">
+                                            @Html.DisplayFor(m => m.LocationID, new { @class = "form-control" })
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Name, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Abbreviation, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Abbreviation, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Directions, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(m => m.Directions, 7, 0, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsDefaultSelectionForClasses, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                <div style="border:1px solid lightgray; padding:10px; border-radius:5px; background-color:white">
+
+
+                                    <div class="checkbox">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.IsDefaultSelectionForClasses, new { @style = "margin-top:1px" })
+                                            Make this location my default selection when creating classes
+                                        </label>
+                                    </div>
+
+                                    @{
+                                        if (Model != null && Model.LocationID > 0)
+                                        {
+                                            <div class="checkbox">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.IsNotAvailableCallToSchedule, new { @style = "margin-top:1px" })
+                                                    This location is not available for 'call to schedule' classes
+                                                </label>
+                                            </div>
+
+                                            <div class="checkbox">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.IsArchive, new { @style = "margin-top:1px" })
+                                                    Archived (check this box if you no longer schedule classes at this location)
+                                                </label>
+                                            </div>
+
+                                        }
+                                    }
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.LocationPrint1, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.LocationPrint1, new { @class = "form-control", @style = "margin-bottom:5px" })
+                                @Html.TextBoxFor(m => m.LocationPrint2, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        {
+                            if (Model != null && Model.LocationID > 0)
+                            {
+                                string ScheduleLink = "https://" + EnrolTraining.Common.SessionWrapper.Current.SubDomain + "domain.com/schedule?location=" + Model.LocationID;
+                                string CalendarLink = "https://" + EnrolTraining.Common.SessionWrapper.Current.SubDomain + "domain.com/calendar?location=" + Model.LocationID;
+                                <div class="form-group">
+                                    @Html.Label("Direct Linkns", new { @class = "col-md-4 control-label" })
+                                    <div class="col-md-8">
+                                        <label style="padding-top:7px"><strong><a class="text-danger"  href="@ScheduleLink">Schedule</a></strong></label> | 
+                                        <label style="padding-top:7px"><strong><a class="text-danger" href="@CalendarLink">Calendar</a></strong></label>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+                        <hr style="border-color:#e8e6e6" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10 text-right">
+                                <a href="/Admin/Locations" class="btn btn-default">Cancel</a>
+                                <input type="submit" value="Save" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                    }
+                </section>
+            </div>
+
+        </div>
+    </div>
+    <div class='clear'></div>

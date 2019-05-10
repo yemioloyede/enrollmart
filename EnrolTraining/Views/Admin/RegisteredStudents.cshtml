@@ -1,0 +1,143 @@
+﻿@model IEnumerable<EnrolTraining.Models.Student>
+
+@{
+    Layout = null;
+    string reghref = "//" + EnrolTraining.Common.SessionWrapper.Current.SubDomain + "." + Request.Url.Host + "/ClassDetail?id=" + ViewBag.ClassID;
+    int classsid = ViewBag.ClassID;
+}
+
+<div class="content-box">
+    <div class="content-box-hdr" style="border-bottom:0px">
+        <div class="content-hdr-form" style="padding-top:8px; font-size:14px">
+            Registered Student List
+            <div class="right-buttons" style="margin-bottom:8px; padding-top:0px">
+                <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal">Quick Add</button>
+                <a href="/Admin/AddStudent?id=@ViewBag.ClassID" class="btn btn-danger btn-xs">Add Student</a>
+                <a href="@reghref" class="btn btn-danger btn-xs">Registration</a>
+
+            </div>
+        </div>
+
+        @{
+            if (Model != null && Model.Count() > 0)
+            {
+                <div style="padding:20px; background-color:white; padding-bottom:10px">
+                    <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Sr. No.
+                                </th>
+
+                                <th>
+                                    Student
+                                </th>
+                                <th>
+                                    Codes
+                                </th>
+                                <th>
+                                    Reg Date
+                                </th>
+                                <th>
+                                    Options
+                                </th>
+                                <th>
+                                    Due
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @{
+                                int i = 0;
+                                Context db = new Context();
+                                //var schedule = db.ScheduleClass.Where(x => x.ClassID == classsid && x.CompanyID == EnrolTraining.Common.SessionWrapper.Current.CompanyID).FirstOrDefault();
+                                //bool isPastClasses = schedule.ScheduleDate < DateTime.Now;
+                                //string boldStyle = isPastClasses == true ? "style='font-weight:bold'" : "";
+
+
+                                foreach (var record in Model)
+                                {
+                                    string boldStyle = record.StatusID == 2 ? "style=font-weight:bold" : "";
+                                    var addonns = string.IsNullOrWhiteSpace(record.SelectedOptions) ? "" : record.SelectedOptions;
+                                    addonns = string.Join(",", db.RegistrationAdOn.Where(e => addonns.Contains(e.AdOnID.ToString())).ToList().Select(e => e.Name).ToList());
+
+                                    i++;
+                                    string name = record.LastName +  ", " + record.FirstName;
+                                    <tr>
+                                        <td>
+                                            @i
+                                        </td>
+                                        <td @boldStyle>
+                                            <span>@name </span> <br />
+                                            <span class="small text-danger studentemail">@record.Email</span>  <br />
+                                            <span class="small">@record.PrimaryPhone</span> 
+                                        </td>
+                                        <td>
+                                               ...
+                                        </td>
+                                        <td>
+                                            @record.RegisterionDate
+                                        </td>
+                                        <td>
+                                            @addonns
+                                        </td>
+                                        <td>
+                                            ...
+                                        </td>
+
+                                        <td>
+                                            <a href="/Admin/EditStudent?id=@record.StudentID"> <span class="fa fa-edit"></span> </a>
+                                            <a href="/Admin/ResendEmail?id=@record.StudentID"> <span class="fa fa-envelope"></span> </a>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td colspan="7" style="padding-top:15px; padding-right:0px">
+                                        <div class="right-buttons" style="padding-right:0px">
+                                            <a id="linkEmails" style="cursor:pointer" class="btn btn-danger btn-xs">Emails</a>
+                                            <a href="/Admin/EditScores?id=@ViewBag.ClassID" class="btn btn-danger btn-xs">Edit Scores</a>
+                                            <a href="#" class="btn btn-danger btn-xs">Finalize Roster</a>
+                                            <a href="/Admin/CardPrinting?id=@ViewBag.ClassID" class="btn btn-danger btn-xs">Print Cards</a>
+                                            <a href="/Admin/CertificatePrinting?id=@ViewBag.ClassID" class="btn btn-danger btn-xs">Certificates</a>
+                                            <a target="_blank" href="/Admin/StudentList?id=@ViewBag.ClassID" class="btn btn-danger btn-xs">Student List</a>
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            }
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+                                }
+                                else
+                                {
+                                    <div style="padding:20px; background-color:white; padding-bottom:10px">
+                                        <div class="alert  alert-link">
+                                            <span class="glyphicon glyphicon-alert"></span>
+                                            <span>This is no student registered at this time</span>
+
+                                        </div>
+
+                                    </div>
+                                }
+        }
+
+    </div>
+
+
+</div>
+<div class='clear'></div>
+
+
+
+@Html.Partial("_QuickAddStudent", new EnrolTraining.Models.Student{ ClassID = ViewBag.ClassID });

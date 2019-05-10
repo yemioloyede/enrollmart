@@ -1,0 +1,71 @@
+﻿@model IEnumerable<EnrolTraining.Models.InstructorCertification>
+
+@{
+    EnrolTraining.Context db = new EnrolTraining.Context();
+    Layout = null;
+}
+
+@{
+    if (Model != null && Model.Count() > 0)
+    {
+        <div style="padding:20px; background-color:white; padding-bottom:10px">
+            <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                <thead>
+                    <tr>
+                        <th>
+                            Discipline
+                        </th>
+                        <th>
+                            Initial
+                        </th>
+                        <th>
+                            Expires
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+
+                        foreach (var record in Model)
+                        {
+                            string certification = db.Discipline.Where(x => x.DisciplineID == record.DisciplineID).Select(x => x.DisciplineName).FirstOrDefault();
+                            <tr>
+                                <td>
+                                    @certification
+                                </td>
+                                <td>
+                                    @record.Initial.ToString("MM/dd/yy")
+                                </td>
+                                <td>
+                                    @record.Expires.ToString("MM/dd/yy")
+                                </td>
+                                <td>
+                                    <a class="EditCertification" href="/Admin/EditInstructorCertification?id=@record.CertificationID"> <span class="fa fa-edit"></span> </a>
+                                    <a href="/Admin/DeleteInstructorCertification?id=@record.CertificationID"> <span class="fa fa-trash"></span> </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+                        }
+                        else
+                        {
+                            <div style="padding:20px; background-color:white; padding-bottom:10px">
+                                <div class="alert  alert-link">
+                                    <span class="glyphicon glyphicon-alert"></span>
+                                    <span>No Certification is added yet</span>
+
+                                </div>
+
+                            </div>
+                        }
+
+}

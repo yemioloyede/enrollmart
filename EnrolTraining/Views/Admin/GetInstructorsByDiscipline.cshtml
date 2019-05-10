@@ -1,0 +1,75 @@
+﻿@model dynamic
+
+@{
+    Layout = null;
+}
+
+
+
+
+
+<div class="content-box">
+    <div class="content-box-hdr" style="border-bottom:0px">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px; padding-bottom:13px">
+            Instructors By Discipline
+
+            <div class="right-buttons" style="margin-bottom:8px">
+            </div>
+        </div>
+
+        @{
+            if (Enumerable.Count(Model) > 0 )
+            {
+                <div style="padding:20px; background-color:white; padding-bottom:10px">
+                    <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Discipline
+                                </th>
+                                <th>
+                                    Instructors
+                                </th>
+                        </thead>
+                        <tbody>
+
+                            @{
+
+                                foreach (dynamic discipline in Model)
+                                {
+                                    <tr>
+                                        <td >
+                                            @discipline.GetType().GetProperty("Discipline").GetValue(discipline, null)
+                                        </td>
+
+                                        <td>
+                                            @discipline.GetType().GetProperty("Instructors").GetValue(discipline, null)
+                                        </td>
+                                    </tr>
+
+                                }
+
+                            }
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+                                }
+                                else
+                                {
+                                    <div style="padding:20px; background-color:white; padding-bottom:10px">
+                                        <div class="alert  alert-link">
+                                            <span class="glyphicon glyphicon-alert"></span>
+                                            <span>No Record Found</span>
+
+                                        </div>
+
+                                    </div>
+                                }
+        }
+
+    </div>
+</div>

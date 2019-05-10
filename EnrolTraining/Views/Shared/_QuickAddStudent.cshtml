@@ -1,0 +1,128 @@
+﻿@model EnrolTraining.Models.Student
+@{
+    EnrolTraining.Context dbc = new EnrolTraining.Context();
+    var query = (from schedule in dbc.ScheduleClass
+                 join course in dbc.CourseType on schedule.CourseID equals course.CourseTypeID
+                 where schedule.ClassID == Model.ClassID
+                 select new { CourseName = course.CourseName, CoursePrice = schedule.Price, ScheduleDate = schedule.ScheduleDate, StartTime = schedule.StartTime, LocationID = schedule.LocationID, KeycodeBankID = course.KeycodeBankID });
+
+
+    var locationID = query.Select(x => x.LocationID).FirstOrDefault();
+    var keyBankID = query.Select(x => x.KeycodeBankID).FirstOrDefault().ToString();
+
+    var CourseName = query.Select(x => x.CourseName).FirstOrDefault().ToString();
+    var ScheduleDate = query.Select(x => x.ScheduleDate).FirstOrDefault().ToString();
+    var StartTime = query.Select(x => x.StartTime).FirstOrDefault().ToString();
+    var classPrice = query.Select(x => x.CoursePrice).FirstOrDefault().ToString();
+}
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form action="/Admin/QuickAddStudent" method="post" class="form-horizontal">
+                @Html.Hidden("ClassID", Model.ClassID)
+                @Html.Hidden("LocationID", locationID)
+                @Html.Hidden("KeycodeBankID", keyBankID)
+                @Html.Hidden("CourseName", CourseName)
+                @Html.Hidden("ScheduleDate", ScheduleDate)
+                @Html.Hidden("StartTime", StartTime)
+                @Html.Hidden("ClassPrice", classPrice)
+
+
+                <div class="modal-header">
+                    <span style="font-size:x-large" class="modal-title">Quck Add Student</span>
+                </div>
+                <div class="modal-body" style="padding-right:35px">
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBox("Email", null, new { @class = "form-control", @data_val="false" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PrimaryPhone, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBox("PrimaryPhone", null, new { @class = "form-control", @data_val = "false" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MailingAddress1, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBox("MailingAddress1", null, new { @class = "form-control", @data_val = "false" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MailingAddress2, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.MailingAddress2, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MailingCity, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBox("MailingCity", null, new { @class = "form-control", @data_val = "false" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MailingState, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("MailingState", DropdownLists.SelectUSAStates(string.IsNullOrWhiteSpace(Model.MailingState) ? "" : Model.MailingState, true, "-Select-"), new { @class = "form-control", @data_val = "false" })
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MailingZip, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBox("MailingZip", null, new { @class = "form-control", @data_val = "false" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TestScore, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.TestScore, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Status", new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.StatusID, DropdownLists.StudentStatus(Model == null || Model.StatusID == null ? "0" : Model.StatusID.ToString(), false), new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" value="Add Student" class="btn btn-success" />
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>

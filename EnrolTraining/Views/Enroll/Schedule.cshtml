@@ -1,0 +1,96 @@
+﻿@model IEnumerable<EnrolTraining.Models.CalendarEvent>
+@{
+    Layout = "~/Views/Shared/_EnrollLayout.cshtml";
+    int locationID = ViewBag.LocationID;
+    int companyID = ViewBag.CompanyID;
+
+    var courses = Model.GroupBy(xp => new { xp.CourseName, xp.courseID });
+}
+
+<script>
+    $(document).ready(function (e) {
+        if (window.location.hash) {
+            var htag = window.location.hash;
+            htag = htag.replace("#", "");
+            $('div[id="' + htag + '"]').addClass('in')
+            window.location.hash = htag;
+        }
+
+        $(document).on('change', '#locationID', function (e) {
+            var form = $('#myform');
+            form.submit();
+
+        });
+
+    })
+</script>
+
+@using (Html.BeginForm("Schedule", "Enroll", null, FormMethod.Post, new { @id = "myform", @class = "form-horizontal", role = "form", @enctype = "multipart/form-data" }))
+{
+
+<div class="row">
+                <div class="col-md-12">
+                    <h4>
+                        Class Schedule
+                    </h4>
+                    <hr style="margin-top:5px" />
+                    <p>Filter classes by Location</p>
+                    @Html.DropDownList("locationID", DropdownLists.LocationsOnCalendar(locationID.ToString(), companyID), new { @class = "form-control" })
+                    <hr />
+
+                    <div class="panel-group" id="accordion">
+                        @{
+                            int i = 1;
+                            foreach (var course in courses)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a name="course_@course.Key.courseID" data-toggle="collapse" data-parent="#accordion" href="#course_@course.Key.courseID">@course.Key.CourseName</a>
+                                        </h4>
+                                    </div>
+                                
+                                <div id='course_@course.Key.courseID' class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        @{
+                                            int x = 1;
+                                            foreach (var schedule in course)
+                                            {
+                                                {
+                                                    if (x == 1)
+                                                    {
+                                                        <div>
+                                                            @Html.Raw(schedule.description)
+                                                        </div>
+
+                                                    }
+                                                    if (schedule.enrolledStudents < schedule.MaxStudents)
+                                                    {
+                                                        var seatsLeft = schedule.MaxStudents - schedule.enrolledStudents;
+                                                        <a href="@schedule.url" title="click to choose this class"  class="btn btn-default" style="width:100%; text-align:left; margin-top:4px; background-color:#fcfcfc; color:red">@schedule.ClassDate.ToString("dddd, MMMM d, yyyy") from @schedule.ClassTime to @schedule.ClassEndTime (@seatsLeft seats left)  <br /> <span class="small">@schedule.location</span> </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a title="this class is full" class="btn btn-default" style="width:100%; text-align:left; margin-top:4px; cursor:default; background-color:#fcfcfc; color:grey">@schedule.ClassDate.ToString("dddd, MMMM d, yyyy") from @schedule.ClassTime to @schedule.ClassEndTime (full)  <br /> <span class="small">@schedule.location</span> </a>
+                                                    }
+                                                }
+                                                x++;
+                                            }
+                                            i++;
+
+                                        }
+
+                                    </div>
+                                </div>
+                              </div>
+
+                                            }
+                        }
+
+
+                    </div>
+    </div>
+</div>
+
+
+                                            }

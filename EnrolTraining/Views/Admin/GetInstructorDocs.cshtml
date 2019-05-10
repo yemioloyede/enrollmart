@@ -1,0 +1,21 @@
+﻿@model IEnumerable<string>
+
+
+
+@{
+    foreach (var file in Model)
+    {
+        <div style="float:left; margin-top:20px; margin-right:20px">
+            <div style="width:100%">
+                <div style="float:left; padding:5px; border:1px solid #3b9446;">
+                    <span>@file</span>
+                </div>
+                <div style="float:left; padding:5px; border:1px solid #3b9446">
+                    <span data-file="@file" style="font-size:12px; cursor:pointer" class="fffuuu text-danger glyphicon glyphicon-trash"></span>
+                </div>
+            </div>
+        </div>
+
+    }
+}
+

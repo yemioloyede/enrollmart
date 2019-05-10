@@ -1,0 +1,77 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.InstructorActivityLog
+@{
+    int id = ViewBag.id;
+    //Layout = null;
+}
+
+<script>
+    $(document).ready(function (e) {
+        $("input[name^='ActivityDate']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+        });
+
+
+    })
+</script>
+
+@*<div class='page-title'>
+    <h1>Add/ Edit Instructor Activity/Event Log - @ViewBag.name</h1>
+</div>*@
+
+<<div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <section>
+    @using (Html.BeginForm("AddInstructorActivity", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+        <div class="modal-header">
+            <h1>Instructor Activity - @ViewBag.name</h1>
+        </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            @Html.Hidden("InstructorID", id)
+                            @Html.Hidden("ActivityID", Model == null ? 0 : Model.ActivityID)
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ActivityDate, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.ActivityDate, "{0:MM/dd/yy}", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.ActivityDate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Activity, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.Activity, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Activity, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Location, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.Location, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Location, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class='modal-footer'>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                        <input type="submit" value="Save" class="btn btn-success" />
+                    </div>
+
+
+                 }
+            </section>
+    </div>
+
+</div>
+
+

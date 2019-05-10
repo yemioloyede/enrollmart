@@ -1,0 +1,66 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.Client>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Client List</h1>
+</div>
+@Html.RenderFlashMessages()
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+
+            </span>
+            <div class="right-buttons">
+                <a href="/Admin/AddClient" class="btn btn-danger btn-xs">New Client</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Abbrev</th>
+                    <th>Contact</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Contact Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in Model)
+                    {
+                        var contactDate = record.ContactDate == null ? "" : Convert.ToDateTime(record.ContactDate).ToString("M/d/yyyy");
+                        <tr>
+                            <td>@record.ClientCompany</td>
+                            <td>@record.Abbreviation</td>
+                            <td>@record.ContactFirstName @record.ContactLastName</td>
+                            <td>@record.MainPhone</td>
+                            <td>@record.EmailAddress</td>
+                            <td>@contactDate</td>
+
+                            <td>
+                                <a href="/Admin/EditClient?id=@record.ClientID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

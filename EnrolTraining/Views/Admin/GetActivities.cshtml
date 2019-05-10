@@ -1,0 +1,120 @@
+﻿@model IEnumerable<EnrolTraining.Models.ClientActivityViewModel>
+
+@{
+    Layout = null;
+    var disciplines = Model.GroupBy(xp => new { xp.Discipline });
+}
+
+
+
+
+
+<div class="content-box">
+    <div class="content-box-hdr" style="border-bottom:0px">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px; padding-bottom:13px">
+            Classes and Students
+
+            <div class="right-buttons" style="margin-bottom:8px">
+            </div>
+        </div>
+
+        @{
+            if (Model != null && Model.Count() > 0)
+            {
+                <div style="padding:20px; background-color:white; padding-bottom:10px">
+                    <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Discipline
+                                </th>
+                                <th>
+                                    Course
+                                </th>
+
+                                <th>
+                                    Classes
+                                </th>
+                                <th>
+                                    Students
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @{
+                                int totalClasses = 0;
+                                int totalStudents = 0;
+                                foreach (var discipline in disciplines)
+                                {
+                                    <tr>
+                                        <td colspan="4">
+                                            <strong>@discipline.Key.Discipline</strong>
+                                        </td>
+                                    </tr>
+
+                                    {
+                                        var summary = discipline.GroupBy(xp => new { xp.CourseName }).Select(xp => new { course = xp.Key.CourseName, classes = xp.Count(), stuents = xp.Sum(x => x.RegisteredStudents) }).ToList();
+                                        foreach (var detail in summary)
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td>@detail.course</td>
+                                                <td>@detail.classes</td>
+                                                <td>@detail.stuents</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td></td>
+                                            <td><strong>Subtotal</strong></td>
+                                            <td><strong>@summary.Sum(x => x.classes)</strong> </td>
+                                            <td><strong>@summary.Sum(x => x.stuents)</strong> </td>
+                                        </tr>
+                                        {
+                                            totalClasses = totalClasses + summary.Sum(x => x.classes);
+                                            totalStudents = totalStudents + summary.Sum(x => x.stuents);
+                                        }
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+
+                                    }
+
+                                }
+
+                                <tr>
+                                    <td><strong>Grand Total</strong></td>
+                                    <td></td>
+                                    <td><strong>@totalClasses</strong> </td>
+                                    <td><strong>@totalStudents</strong> </td>
+
+                                </tr>
+
+
+                            }
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+                                }
+                                else
+                                {
+                                    <div style="padding:20px; background-color:white; padding-bottom:10px">
+                                        <div class="alert  alert-link">
+                                            <span class="glyphicon glyphicon-alert"></span>
+                                            <span>No Record Found</span>
+
+                                        </div>
+
+                                    </div>
+                                }
+        }
+
+    </div>
+</div>

@@ -1,0 +1,57 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.Tax>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Taxes</h1>
+</div>
+@Html.RenderFlashMessages()
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+
+            </span>
+            <div class="right-buttons">
+                <a href="/Admin/AddTax" class="btn btn-danger btn-xs">New Tax</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Percent</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in Model)
+                    {
+                        <tr>
+                            <td>@record.Description</td>
+                            <td>@record.Percentage%</td>
+                            <td>
+                                <a href="/Admin/EditTax?id=@record.TaxID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

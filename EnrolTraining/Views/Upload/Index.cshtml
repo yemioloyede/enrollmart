@@ -1,0 +1,90 @@
+﻿@model EnrolTraining.Models.UploadViewModel
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <link rel="stylesheet" href="@Url.Content("~/Scripts/dropzone/dropzone.css")" media="all">
+    <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.min.css")" media="all" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" media="all" />
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/dropzone/dropzone.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.imglist.js")"></script>
+    <script>
+        $(document).ready(function () {
+            var allowed_ext = new Array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff');
+            //dropzone config
+            Dropzone.options.myAwesomeDropzone = {
+                dictInvalidFileType: "Invalid file type ",
+                dictFileTooBig: "File is to big to upload",
+                dictResponseError: "SERVER ERROR",
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 3000, // MB
+                accept: function (file, done) {
+                    var extension = file.name.split('.').pop();
+                    if ($.inArray(extension, allowed_ext) > -1) {
+                        done();
+                    }
+                    else { done("Done"); }
+                }
+            }
+
+
+            $("#ff-container").imageList({
+                connector: '@Url.Action("ListFiles")',
+                imgcontainer: "ff-container"
+            });
+
+            $('.upload-btn').click(function () {
+                $('.uploader').show(500);
+                $('.ff-container').hide();
+            });
+            $('.close-uploader').click(function () {
+                $('.uploader').hide(500);
+                window.location.reload();
+            });
+
+            $(document).on("click", ".thumbnail", function () {
+                var track = $('#track').val();
+                var closed = window.parent.document.querySelector('[aria-label="Filemanager"]');
+                var target = window.parent.document.getElementById(track);
+                $(target).val($(this).attr("src"));
+                $(closed).find('.mce-close').trigger('click');
+            });
+
+
+
+
+        });
+
+
+
+    </script>
+</head>
+<body>
+    <input type="hidden" id="track" value="@Model.track" />
+    <div class="uploader">
+        <form id="myAwesomeDropzone" method="post" class="dropzone" action="/Upload/UploadFile">
+            <div class="fallback">
+                <input name="file" type="file" multiple />
+            </div>
+
+        </form>
+
+        <center><button class="btn btn-large btn-primary close-uploader"><i class="icon-backward icon-white"></i> Return to file list</button></center>
+        <div class="space10"></div><div class="space10"></div>
+    </div>
+    <!----- uploader div start ------->
+
+    <div class="container-fluid">
+        <!----- header div start -->
+        <div class="filters">
+            <button class="btn btn-primary upload-btn" style="margin-left:5px;"><i class="icon-upload icon-white"></i> Upload file</button>
+        </div>
+        <div class="row-fluid ff-container">
+            <div id="ff-container" class="span12 pull-right"></div>
+        </div>
+    </div>
+
+</body>
+</html>

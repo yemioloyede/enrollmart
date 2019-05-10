@@ -1,0 +1,73 @@
+﻿@model IEnumerable<EnrolTraining.Models.InstructorActivityLog>
+
+@{
+    EnrolTraining.Context db = new EnrolTraining.Context();
+    Layout = null;
+}
+
+@{
+    if (Model != null && Model.Count() > 0)
+    {
+
+        <div style="padding:20px; background-color:white; padding-bottom:10px">
+            <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                <thead>
+                    <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Class/Activity/Event
+                        </th>
+                        <th>
+                            Location
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+
+                        foreach (var record in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @record.ActivityDate.ToString("MM/dd/yy")
+                                </td>
+                                <td>
+                                    @record.Activity
+                                </td>
+                                <td>
+                                    @record.Location
+                                </td>
+                                <td>
+                                    <a class="EditActivity" href="/Admin/EditInstructorActivity?id=@record.ActivityID"> <span class="fa fa-edit"></span> </a>
+                                    <a href="/Admin/DeleteInstructorActivity?id=@record.ActivityID"> <span class="fa fa-trash"></span> </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+                        }
+                        else
+                        {
+        <div style="padding:20px; background-color:white; padding-bottom:10px">
+            <div class="alert  alert-link">
+                <span class="glyphicon glyphicon-alert"></span>
+                <span>No Record found</span>
+
+            </div>
+
+        </div>
+    }
+
+}
+
+

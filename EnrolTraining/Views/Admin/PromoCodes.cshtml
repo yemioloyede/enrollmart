@@ -1,0 +1,64 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.PromoCode>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Promo Codes</h1>
+</div>
+@Html.RenderFlashMessages()
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+
+            </span>
+            <div class="right-buttons">
+                <a href="/Admin/AddPromoCode" class="btn btn-danger btn-xs">New Promo Code</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Discount</th>
+                    <th>Remaining</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in Model)
+                    {
+                        <tr>
+                            <td>@record.Code</td>
+                            <td>@record.Description</td>
+                            <td>@record.StartDate.ToString("M/d/yyyy")</td>
+                            <td>@record.EndDate.ToString("M/d/yyyy")</td>
+                            <td>@record.Discount</td>
+                            <td>@record.NumOfUses</td>
+                            <td>
+                                <a href="/Admin/EditPromoCode?id=@record.CodeID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

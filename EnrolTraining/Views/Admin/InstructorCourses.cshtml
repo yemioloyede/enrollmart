@@ -1,0 +1,123 @@
+﻿@model IEnumerable<EnrolTraining.Models.InstructorClasses>
+
+@{
+    if (Model.Count() > 0)
+    {
+        int instructorid = ViewBag.InsID;
+        var CourseCounts = Model.GroupBy(xp => new { xp.Course }).Select(xp => new { course = xp.Key.Course, leads = xp.Where(x => x.InstructorID == instructorid).Count(), assistant = xp.Where(x => x.AssistantID == instructorid).Count() }).ToList();
+
+        <div style="padding:20px; background-color:white; padding-bottom:10px">
+            <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                <thead>
+                    <tr>
+                        <th>
+                            Discipline
+                        </th>
+                        <th>
+                            As Lead
+                        </th>
+                        <th>
+                            As Assistant
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+
+                        foreach (var record in CourseCounts)
+                        {
+                            int total = record.leads + record.assistant;
+                            <tr>
+                                <td>
+                                    @record.course
+                                </td>
+                                <td>
+                                    @record.leads
+                                </td>
+                                <td>
+                                    @record.assistant
+                                </td>
+                                <td>
+                                    @total
+                                </td>
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+        
+        <h2 style="font-size: 14px; font-weight: bold; padding-left: 40px; letter-spacing:normal; ">
+            Course Details
+        </h2>
+        <div style="padding:20px; background-color:white; padding-bottom:10px">
+            <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                <thead>
+                    <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Course
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Students
+                        </th>
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+
+                        foreach (var record in Model)
+                        {
+                            string type = record.InstructorID > 0 ? "Lead" : "Assistant";
+                            <tr>
+                                <td>
+                                    @record.ClassDate.ToString("MM/dd/yyyy")
+                                </td>
+                                <td>
+                                    @record.Course
+                                </td>
+                                <td>
+                                    @type
+                                </td>
+                                <td>
+                                    @record.RegisteredStudents
+                                </td>
+                                <td>
+                                    <a href="/Admin/EditClass?id=@record.ClassID"> <span class="fa fa-edit"></span> </a>
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+        }
+        else
+        {
+            <div style="padding:20px; background-color:white; padding-bottom:10px">
+                <div class="alert  alert-link">
+                    <span class="glyphicon glyphicon-alert"></span>
+                    <span>No Record Found</span>
+                </div>
+            </div>
+         }
+}

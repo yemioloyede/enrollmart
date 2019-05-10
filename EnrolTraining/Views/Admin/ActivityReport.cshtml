@@ -1,0 +1,113 @@
+﻿@model EnrolTraining.Models.ReportFilters
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    string showrange = Model != null && Model.DateCriteria == "Custom Range" ? "true" : "false";
+}
+
+<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        var isShowRange = @showrange;
+        if (isShowRange == true)
+        {
+            $('#range').show();
+        }
+        else
+        {
+            $('#range').hide();
+        }
+
+        jQuery('#DateForm').datetimepicker({
+            format: 'Y/m/d',
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: jQuery('#DateTo').val() ? jQuery('#DateTo').val() : new Date(new Date().setDate(new Date().getDate()-1))
+                })
+            },
+            timepicker: false
+        });
+
+        jQuery('#DateTo').datetimepicker({
+            format: 'Y/m/d',
+            maxDate: new Date(new Date().setDate(new Date().getDate()-1)),
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: jQuery('#DateForm').val() ? jQuery('#DateForm').val() : false
+                })
+            },
+            timepicker: false
+        });
+
+        $('#DateCriteria').change(function (e) {
+            var criteria = $(this).val();
+            if (criteria == "Custom Range")
+            {
+                $('#range').show();
+            }
+            else
+            {
+                $('#range').hide();
+            }
+        })
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Activity Report</h1>
+</div>
+
+<form style="padding:15px; background-color:rgb(250, 250, 250); border:1px solid #ededed;border-radius:5px" class="form-horizontal" method="post" action="/Admin/ActivityReport">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-1" style="max-width:55px">
+                <label style="padding-top:7px">Dates:</label>
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.DateCriteria, EnrolTraining.DropdownLists.ClientDatesFilter(Model == null ? "" : Model.DateCriteria, false), new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.DateCriteria, "", new { @class = "text-danger" })
+            </div>
+
+            @*<div class="col-md-1" style="max-width:55px">
+                <label style="padding-top:7px">Client:</label>
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.ClinetID, EnrolTraining.DropdownLists.Clients(Model == null ? "0" : Model.ClinetID.ToString(), true, "-Choose-"), new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ClinetID, "", new { @class = "text-danger" })
+            </div>*@
+
+            <div class="col-md-4">
+                <div id="range" style="display:none">
+                    <div class="input-group input-daterange">
+                        @Html.TextBoxFor(m => m.DateForm, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.DateForm, "", new { @class = "text-danger" })
+
+
+                        <div class="input-group-addon">to</div>
+
+                        @Html.TextBoxFor(m => m.DateTo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.DateTo, "", new { @class = "text-danger" })
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="col-md-2">
+                <input type="submit" value="Go" class="btn btn-primary" />
+            </div>
+
+        </div>
+    </div>
+</form>
+
+@{
+    if (Model != null)
+    {
+        Html.RenderAction("GetInstructorsByDiscipline", "Admin", new { DateCriteria = Model.DateCriteria, DateFrom = Model.DateForm, DateTo = Model.DateTo });
+        Html.RenderAction("GetActivities", "Admin", new { DateCriteria = Model.DateCriteria, DateFrom = Model.DateForm, DateTo = Model.DateTo});
+    }
+}

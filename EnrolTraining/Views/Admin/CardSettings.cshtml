@@ -1,0 +1,257 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.CardSetting
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int cid = Model == null ? 0 : Model.CardType;
+}
+
+<script>
+    $(document).ready(function (e) {
+
+        $(document).on('click', '[type="submit"][data-form-action]', function(event) {
+            var $this = $(this);
+            var formAction = $this.attr('data-form-action');
+            $form = $($this.closest('form'));
+            $form.attr('action', formAction);             
+        });
+
+        $('#ProfileID').change(function (e) {
+            var id = $('#ProfileID');
+            if (id.val() != "")
+            {
+                var form = $('#filterForm');
+                form.submit();
+            }
+        })
+
+        function ControlSetup(id) {
+            $('#lblCourseLocation').text('Course Location');
+            $('#lblTCInfo').text('TC Info');
+            $('#lblTrainingCenter').text('Training Ctr');
+            $('#Card1Container').show();
+            $('#Card2Container').show();
+            $('#Card3Container').show();
+            $('#TCInfoContainer').show();
+            $('#TCInfo2').show();
+            $('#CourseLocationContainer').show();
+            $('#CourseLocation2').show();
+            $('#TrainingCenterContainer').show();
+            if (id == 2) {
+                $('#Card3Container').hide();
+            }
+            else if (id == 3) {
+                $('#lblTCInfo').text('TC Address');
+                $('#lblCourseLocation').text('TC City/St/Zip');
+                $('#CourseLocation2').hide();
+                $('#CourseLocation2').val('');
+                $('#TCInfo2').hide();
+                $('#TCInfo2').val('');
+            }
+            else if (id == 4) {
+                $('#lblTCInfo').text('TC Address');
+                $('#lblCourseLocation').text('TC City/St/Zip');
+                $('#CourseLocation2').hide();
+                $('#CourseLocation2').val('');
+                $('#TCInfo2').hide();
+                $('#TCInfo2').val('');
+                $('#Card3Container').hide();
+            }
+            else if (id == 5) {
+                $('#lblTCInfo').text('TC Address');
+            }
+
+            else if (id == 6 || id==7) {
+                $('#lblTCInfo').text('Training Ctr Phone');
+                $('#lblTrainingCenter').text('Training Ctr ID');
+                $('#CourseLocationContainer').hide();
+                $('#CourseLocation1').val('');
+                $('#CourseLocation2').val('');
+                $('#TCInfo2').val('');
+                $('#TCInfo2').hide();
+                $('#Card2Container').hide();
+                $('#Card3Container').hide();
+            }
+
+            else if (id == 8) {
+                $('#lblTCInfo').text('Phone');
+                $('#CourseLocationContainer').hide();
+                $('#CourseLocation1').val('');
+                $('#CourseLocation2').val('');
+                $('#TCInfo2').val('');
+                $('#TCInfo2').hide();
+            }
+
+            else if (id == 9 || id == 10) {
+                $('#TCInfoContainer').hide();
+                $('#TCInfo1').val('');
+                $('#TCInfo2').val('');
+                $('#CourseLocationContainer').hide();
+                $('#CourseLocation1').val('');
+                $('#CourseLocation2').val('');
+                $('#TrainingCenterContainer').hide();
+                $('#TrainingCenter').val('');
+                $('#Card2Container').hide();
+                $('#Card3Container').hide();
+            }
+
+
+        }
+
+        ControlSetup(@cid);
+
+        $('#CardType').change(function (e) {
+            var id = parseInt(this.value, 10);
+            ControlSetup(id);
+        })
+
+
+    })
+</script>
+
+
+<div class='page-title'>
+    <h1>Certification Card Settings</h1>
+</div>
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            @using (Html.BeginForm("GetCardProfile", "Admin", null, FormMethod.Post, new  {@id="filterForm", @class = "form-horizontal", role = "form" }))
+            {
+                <span id="mainContent_filterfields">
+                    @Html.DropDownListFor(m => m.ProfileID, DropdownLists.CardSettingProfiles(Model == null ? "0" : Model.ProfileID.ToString(), false, "Select Profile"), new { @class = "form-control NumberField" })
+                </span>
+            }
+                <div class="right-buttons">
+
+                </div>
+</div>
+    </div>
+
+    <div class="FormWrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <section>
+                @using (Html.BeginForm("CardSettings", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                    @Html.RenderFlashMessages()
+                    @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+                    @Html.Hidden("ProfileID", Model == null ? 0 : Model.ProfileID)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ProfileName, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.ProfileName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.ProfileName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                            @Html.LabelFor(m => m.CardType, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.CardType, DropdownLists.CardTypes(Model == null ? "0" : Model.CardType.ToString(), false), new { @class = "form-control" })
+                            </div>
+                    </div>
+
+                    <div class="form-group" id="TrainingCenterContainer">
+                        @Html.LabelFor(m => m.TrainingCenter, new {@id="lblTrainingCenter", @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.TrainingCenter, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="TCInfoContainer">
+                        @Html.LabelFor(m => m.TCInfo1, new { @id = "lblTCInfo", @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.TCInfo1, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.TCInfo2, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="CourseLocationContainer">
+                        @Html.LabelFor(m => m.CourseLocation1, new {@id="lblCourseLocation", @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.CourseLocation1, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.CourseLocation2, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Card1, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                <div style="border:1px solid lightgray; float:left; width:100%; padding:10px 10px 10px 10px; border-radius:5px; background-color:white">
+
+                                    <div id="Card1Container">
+                                        <div class="col-md-1" style="padding:0px">
+                                            <label style="padding-top:7px; font-weight:normal">Card 1</label>
+                                        </div>
+                                        <div class="col-md-11">
+                                            @Html.DropDownListFor(m => m.Card1, DropdownLists.CardAllignments(Model == null ? "3" : Model.Card1.ToString(), false, "Card 1"), new { @class = "form-control NumberField" })
+                                        </div>
+                                    </div>
+                                    <div id="Card2Container">
+                                        <div class="col-md-1" style="padding:0px">
+                                            <label style="padding-top:7px; font-weight:normal">Card 2</label>
+                                        </div>
+                                        <div class="col-md-11">
+                                            @Html.DropDownListFor(m => m.Card2, DropdownLists.CardAllignments(Model == null ? "3" : Model.Card2.ToString(), false, "Card 2"), new { @class = "form-control NumberField" })
+                                        </div>
+                                    </div>
+                                    <div id="Card3Container">
+                                        <div class="col-md-1" style="padding:0px">
+                                            <label style="padding-top:7px; font-weight:normal">Card 3</label>
+                                        </div>
+                                        <div class="col-md-11">
+                                            @Html.DropDownListFor(m => m.Card3, DropdownLists.CardAllignments(Model == null ? "3" : Model.Card3.ToString(), false, "Card 3"), new { @class = "form-control NumberField" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.IsDefault, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            <div style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.IsDefault, new { @style = "margin-top:1px;", @checked = "checked" })
+                                        This is the default card printing profile
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr style="border-color:#e8e6e6" />
+                    <div class="form-group">
+                        <div class="col-md-offset-4 col-md-8 text-right">
+                            @{
+                                if (Model != null && Model.ProfileID > 0)
+                                {
+                                    <button type="submit" class="btn btn-primary" data-form-action="/Admin/TestCardSetting">Test Settings</button>
+                                    @*<a href="/Admin/TestCardSetting?id=@Model.ProfileID" class="btn btn-primary">Test Settings</a>*@
+                                }
+                            }
+                            
+                            <input type="submit" value="Save Settings" class="btn btn-success" data-form-action="/Admin/CardSettings" />
+                            @{
+                                if (Model != null && Model.ProfileID > 0)
+                                {
+                                    <a href="/Admin/DeleteCardSettings?id=@Model.ProfileID" class="btn btn-danger">Delete</a>
+                                }
+                            }
+                            
+                        </div>
+                    </div>
+
+                }
+            </section>
+        </div>
+
+    </div>
+    </div>
+</div>
+<div class='clear'></div>

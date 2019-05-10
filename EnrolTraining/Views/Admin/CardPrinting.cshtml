@@ -1,0 +1,326 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.CardPrintViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script>
+    function CheckSelectedStudent(event) {
+        var totalSelected = jQuery('input[type=checkbox]:checked').length;
+        if (totalSelected > 0) {
+            return true;
+        }
+        else
+        {
+            event.preventDefault();
+            alert('Please select at least one student');
+            return false;
+        }
+    }
+</script>
+
+<script>
+    $(document).ready(function (e) {
+
+
+        var pid = $('#ProfileID').val();
+        if (pid != null) {
+            ControlSetup(pid);
+            PopulateCardFields(pid);
+        }
+
+
+        function PopulateCardFields(id)
+        {
+            $.post("/Admin/GetCardProfile", { ProfileID: id }, function (data) {
+                $('#CardType').val(data.CardType);
+                $('#TrainingCenter').val(data.TrainingCenter);
+                $('#TCInfo1').val(data.TCInfo1);
+                $('#TCInfo2').val(data.TCInfo2);
+                $('#CourseLocation1').val(data.CourseLocation1);
+                $('#CourseLocation2').val(data.CourseLocation2);
+            });
+
+        }
+
+
+        function ControlSetup(id) {
+            $('#lblCourseLocation').text('Course Location');
+            $('#lblTCInfo').text('TC Info');
+            $('#lblTrainingCenter').text('Training Ctr');
+            $('#Card1Container').show();
+            $('#Card2Container').show();
+            $('#Card3Container').show();
+            $('#TCInfoContainer').show();
+            $('#TCInfo2').show();
+            $('#CourseLocationContainer').show();
+            $('#CourseLocation2').show();
+            $('#TrainingCenterContainer').show();
+            if (id == 2) {
+                $('#Card2Container').find('#CardOnPage').prop("checked", true);
+            }
+            else if (id == 3) {
+                $('#lblTCInfo').text('TC Address');
+                $('#lblCourseLocation').text('TC City/St/Zip');
+                $('#CourseLocation2').hide();
+                $('#CourseLocation2').val('');
+                $('#TCInfo2').hide();
+                $('#TCInfo2').val('');
+                $('#Card3Container').find('#CardOnPage').prop("checked", true);
+            }
+            else if (id == 4) {
+                $('#lblTCInfo').text('TC Address');
+                $('#lblCourseLocation').text('TC City/St/Zip');
+                $('#CourseLocation2').hide();
+                $('#CourseLocation2').val('');
+                $('#TCInfo2').hide();
+                $('#TCInfo2').val('');
+                $('#Card2Container').find('#CardOnPage').prop("checked", true);
+
+            }
+            else if (id == 5) {
+                $('#lblTCInfo').text('TC Address');
+            }
+
+            else if (id == 6 || id == 7) {
+                $('#lblTCInfo').text('Training Ctr Phone');
+                $('#lblTrainingCenter').text('Training Ctr ID');
+                $('#CourseLocationContainer').hide();
+                $('#CourseLocation1').val('');
+                $('#CourseLocation2').val('');
+                $('#TCInfo2').val('');
+                $('#TCInfo2').hide();
+                $('#Card1Container').find('#CardOnPage').prop("checked", true);
+
+            }
+
+            else if (id == 8) {
+                $('#lblTCInfo').text('Phone');
+                $('#CourseLocationContainer').hide();
+                $('#CourseLocation1').val('');
+                $('#CourseLocation2').val('');
+                $('#TCInfo2').val('');
+                $('#TCInfo2').hide();
+                $('#Card3Container').find('#CardOnPage').prop("checked", true);
+
+            }
+
+            else if (id == 9 || id == 10) {
+                $('#TCInfoContainer').hide();
+                $('#TCInfo1').val('');
+                $('#TCInfo2').val('');
+                $('#CourseLocationContainer').hide();
+                $('#CourseLocation1').val('');
+                $('#CourseLocation2').val('');
+                $('#TrainingCenterContainer').hide();
+                $('#TrainingCenter').val('');
+                $('#Card1Container').find('#CardOnPage').prop("checked", true);
+
+            }
+        }
+
+        $('#ProfileID').change(function (e) {
+            var id = parseInt(this.value, 10);
+            ControlSetup(id);
+            PopulateCardFields(id);
+        })
+
+    });
+</script>
+
+<div class='page-title'>
+    <h1>@Model.CourseName</h1>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3 style="float:left; margin-left:5px; margin-top:0px; font-size:15px; color:#485a6f">@Model.ScheduleDate.ToString("ddd M/d/yyyy") from @Model.StartTime to @Model.EndTime</h3>
+    </div>
+</div>
+<div class="FormWrapper">
+
+    <form method="post" action="/Admin/StudentCards" class="form-horizontal" onsubmit="return CheckSelectedStudent(event);">
+        @Html.Hidden("CourseName", Model.CourseName)
+        @Html.Hidden("ClassID", Model.ClassID)
+        <div class="content-box">
+            <div class="content-box-hdr" style="border-bottom:0px; background:none">
+                <div class="content-hdr-form" style="padding-top:8px; font-size:14px">
+                    <div class="right-buttons" style="margin-bottom:8px;padding-top:0px">
+                    </div>
+                </div>
+
+                @{
+                    if (Model != null)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div style="padding:20px; background-color:white; padding-bottom:10px">
+                                    <h4 style="font-size:18px; color:darkviolet">Select Students</h4>
+                                    <hr />
+                                    @Html.ValidationMessageFor(m => m.SelectedStudent, "", new { @class = "text-danger" })
+
+
+                                    <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Print
+                                                </th>
+
+                                                <th>
+                                                    First Name
+                                                </th>
+                                                <th>
+                                                    Last Name
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @{
+
+                                                for (int i = 0; i < Model.StudentID.Length; i++)
+                                                {
+                                                    @Html.Hidden("StudentID[" + i + "]", Model.StudentID[i])
+                                                    @Html.Hidden("Address1[" + i + "]", Model.Address1 == null ? "" : Model.Address1[i])
+                                                    @Html.Hidden("Address2[" + i + "]", Model.Address2 == null ? "" : Model.Address2[i])
+                                                    @Html.Hidden("City[" + i + "]", Model.City ==  null ? "" : Model.City[i])
+                                                    @Html.Hidden("State[" + i + "]", Model.State == null ? "" : Model.State[i])
+                                                    @Html.Hidden("Zip[" + i + "]", Model.Zip == null ? "" : Model.Zip[i])
+
+                                                    <tr>
+                                                        <td>
+                                                            @Html.CheckBox("SelectedStudent[" + i + "]")
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBox("FirstName[" + i + "]", Model.FirstName[i], new { @class = "form-control" })
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBox("LastName[" + i + "]", Model.LastName[i], new { @class = "form-control" })
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+                                            }
+
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-12" style="padding:20px">
+                                    <h4 style="font-size:18px; color:darkviolet">Print Otions</h4>
+                                    <hr />
+
+                                    @Html.Hidden("CardType", "0");
+                                    <div class="form-group">
+                                        @Html.Label("Profile", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.DropDownListFor(m => m.ProfileID, DropdownLists.CardPrintingProfiles(), new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.ProfileID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="TrainingCenterContainer">
+                                        @Html.LabelFor(m => m.TrainingCenter, new { @id = "lblTrainingCenter", @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.TrainingCenter, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="TCInfoContainer">
+                                        @Html.LabelFor(m => m.TCInfo1, new { @id = "lblTCInfo", @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.TCInfo1, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.TCInfo2, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="CourseLocationContainer">
+                                        @Html.LabelFor(m => m.CourseLocation1, new { @id = "lblCourseLocation", @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.CourseLocation1, new { @class = "form-control" })
+                                            @Html.TextBoxFor(m => m.CourseLocation2, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.Label("Instructor", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.Instructor, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("Issue Date", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.IssueDate, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("Renewal", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.Expires, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.Label("First Page", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            <div style="border:1px solid lightgray; float:left; padding:10px 10px 0px 10px; border-radius:5px; background-color:white; width:100%">
+                                                <div  id="Card1Container" class="col-md-4">
+                                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                        <label>
+                                                            @Html.RadioButtonFor(m => m.CardOnPage, 1, new { @style = "margin-top:1px;"})
+                                                            1 Card
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div id="Card2Container" class="col-md-4">
+                                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                        <label>
+                                                            @Html.RadioButtonFor(m => m.CardOnPage, 2, new { @style = "margin-top:1px;" })
+                                                            2 Card
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div id="Card3Container" class="col-md-4">
+                                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                        <label>
+                                                            @Html.RadioButtonFor(m => m.CardOnPage, 3, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                            3 Card
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr style="border-color:#e8e6e6" />
+                                    <div class="form-group">
+                                        <div class="col-md-offset-3 col-md-9 text-right">
+                                            <a href="/Admin/EditClass?id=@Model.ClassID" class="btn btn-default">Back</a>
+                                            <input type="submit" value="Generate Cards" class="btn btn-success" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                                                }
+                }
+
+            </div>
+
+
+        </div>
+    </form>
+
+</div>
+
+
+<div class='clear'></div>

@@ -1,0 +1,160 @@
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\csc.exe
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\System.Collections.Immutable.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\System.Reflection.Metadata.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\vbc.exe
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\VBCSCompiler.exe
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\roslyn\VBCSCompiler.exe.config
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\EnrolTraining.dll.config
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\EnrolTraining.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\EnrolTraining.pdb
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Antlr3.Runtime.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\DocX.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\EntityFramework.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\EntityFramework.SqlServer.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\HtmlAgilityPack.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\itextsharp.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.Core.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.Owin.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Cookies.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Facebook.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Google.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.OAuth.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Twitter.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Web.Administration.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Web.Infrastructure.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Newtonsoft.Json.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Owin.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\PayPal.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Stripe.net.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.Helpers.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.Mvc.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.Optimization.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.Razor.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.Deployment.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.Razor.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Vereyon.Web.FlashMessage.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\WebGrease.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\HtmlAgilityPack.pdb
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\HtmlAgilityPack.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\itextsharp.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Newtonsoft.Json.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\PayPal.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.Helpers.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.Mvc.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.Optimization.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.Razor.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.Deployment.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.Razor.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Antlr3.Runtime.pdb
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\EntityFramework.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\EntityFramework.SqlServer.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.Core.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.Owin.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.EntityFramework.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Facebook.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Cookies.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.OAuth.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Google.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Twitter.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\obj\Debug\EnrolTraining.csprojResolveAssemblyReference.cache
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\obj\Debug\EnrolTraining.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining\obj\Debug\EnrolTraining.pdb
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\csc.exe
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\System.Collections.Immutable.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\System.Reflection.Metadata.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\vbc.exe
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\VBCSCompiler.exe
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\roslyn\VBCSCompiler.exe.config
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\EnrolTraining.dll.config
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\EnrolTraining.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\EnrolTraining.pdb
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Antlr3.Runtime.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\DocX.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\EntityFramework.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\EntityFramework.SqlServer.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\HtmlAgilityPack.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\itextsharp.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.Core.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.Owin.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Cookies.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Facebook.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Google.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.OAuth.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Twitter.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Web.Administration.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Web.Infrastructure.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Newtonsoft.Json.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Owin.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\PayPal.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Stripe.net.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.Helpers.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.Mvc.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.Optimization.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.Razor.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.Deployment.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.Razor.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Vereyon.Web.FlashMessage.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\WebGrease.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\HtmlAgilityPack.pdb
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\HtmlAgilityPack.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\itextsharp.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Newtonsoft.Json.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\PayPal.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.Helpers.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.Mvc.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.Optimization.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.Razor.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.Deployment.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\System.Web.WebPages.Razor.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Antlr3.Runtime.pdb
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\EntityFramework.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\EntityFramework.SqlServer.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.Core.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.Owin.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.AspNet.Identity.EntityFramework.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Facebook.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Cookies.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.OAuth.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Google.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.Twitter.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\obj\Debug\EnrolTraining.csprojResolveAssemblyReference.cache
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\obj\Debug\EnrolTraining.dll
+D:\Apps\Web\MVC\EnrolTraining\EnrolTraining\obj\Debug\EnrolTraining.pdb

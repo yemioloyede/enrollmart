@@ -1,0 +1,384 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content='text/html;charset=UTF-8' http-equiv='content-type'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no' name='viewport' />
+    <meta content='Enrollmart BackOffice' name='application-name'>
+    <meta content='#FFFFFF' name='msapplication-TileColor'>
+
+    <link rel="stylesheet" media="screen" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" media="screen" href="~/css/AppIcon.css" />
+    <link rel="stylesheet" media="screen" href="~/Content/FontAwesome.css" />
+    <link rel="stylesheet" media="screen" href="~/css/bootstrap-multiselect.css" />
+    <link rel="stylesheet" media="screen" href="~/Content/tooltip.css" />
+
+    @*<link rel="stylesheet" href="~/Content/DataTables/css/dataTables.bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/Content/DataTables/css/responsive.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/DataTables/css/rowReorder.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/DataTables/css/buttons.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/DataTables/css/select.bootstrap.min.css" />*@
+
+
+    @*<link rel="stylesheet" href="~/Content/DataTables/css/jquery.dataTables.css" />*@
+    <link rel="stylesheet" media="screen" href="~/css/datatables.min.css" />
+    @*<link rel="stylesheet" media="screen" href="/css/jAlert.css" />*@
+    
+    <link rel="stylesheet" media="screen" href="~/Content/Site.css" />
+
+
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/AppLayout.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.cookie-1.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>    
+    <script src="~/Scripts/MetisMenu.min.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.responsive.min.js"></script>
+    <script src="~/Scripts/bootstrap-multiselect.js"></script>
+    <script src="~/Scripts/jquery.tooltip.js"></script>
+
+    @*<script src="/Scripts/jAlert.min.js"></script>
+    <script src="/Scripts/jAlert-functions.min.js"></script>*@
+
+    <script type="text/javascript">
+
+    window.onload = function () {
+        setInterval("KeepSessionAlive()", 250000)
+    }
+
+    function KeepSessionAlive() {
+        url = "/Admin/KeepSessionAlive";
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("POST", url, false);
+        xmlHttp.send();
+
+        
+    }
+
+    </script>
+
+    
+    <script>
+
+            $(document).ready(function () {
+                
+                
+                $.ajaxSetup({
+                    error: function (jqXHR, statusText, error) {
+
+                        if (typeof (jqXHR.responseJSON) == "object") {
+                            if (jqXHR.responseJSON.result == 'Redirect') {
+                                window.location = jqXHR.responseJSON.url;
+                            }
+                        }
+                        else {
+                            if (jqXHR.responseJSON != "") {
+                                alert(jqXHR.responseJSON);
+                            }
+                            else {
+                                alert(error);
+                            }
+                        }
+                    }
+
+                });
+            });
+
+    </script>
+
+
+    <title>Enrol for Training</title>
+</head>
+<body>
+
+
+@{
+    EnrolTraining.Models.LoginUser LoginUser = new EnrolTraining.Models.LoginUser();
+
+    if (Session["LoginUser"] != null)
+    {
+        string calendar = "//" + EnrolTraining.Common.SessionWrapper.Current.SubDomain + "." + Request.Url.Host + "/calendar";
+
+        LoginUser = (EnrolTraining.Models.LoginUser)Session["LoginUser"];
+        <div class='wrapper' style="padding-bottom:0px">
+            <aside class='navigation-sidebar hide-for-print'>
+                <nav>
+                    <div class='navigation-header'>
+                        <a class='navigation-toggle' href='#' role='button'>
+                            <span></span>
+                        </a>
+                        <a class='backoffice-logo' href='/'>
+                            <span style="font-size:24px; font-weight:bold; color:wheat;" class="glyphicon glyphicon-bishop"></span>
+                            <span style="font-size:20px; font-weight:bold; color:wheat;">Enrollmart</span>
+                            @*<img alt="ShopKeep Backoffice" src="/Images/accent.png" />*@
+                        </a>
+                    </div>
+                    <ul class='navigation-menu'>
+                        <li class='registration'>
+                            <a style="font-size:16px; font-weight:bold; color:#a84f32" href="@calendar">Registration</a>
+                        </li>
+                        <li class='sub-menu dashboard'>
+                            <a href="/dashboard">Classes & Students</a>
+                            <ul class='collapse' role='menu'>
+                                <li class='js-analytics-dashboard'>
+                                    <a href="/Admin/UpcomingClasses">Upcoming Classes</a>
+                                </li>
+                                <li class='js-analytics-dashboard'>
+                                    <a href="/Admin/ScheduleClass">Schedule a Class</a>
+                                </li>
+                                <li class='js-analytics-dashboard'>
+                                    <a href="/Admin/PastClasses">Past Classes</a>
+                                </li>
+                                <li class='js-analytics-dashboard'>
+                                    <a href="/Admin/KeycodeSales">Keycode Sales</a>
+                                </li>
+                                <li class='js-analytics-dashboard'>
+                                    <a href="/Admin/StudentSearch">Student Search</a>
+                                </li>
+                                <li class='js-analytics-dashboard'>
+                                    <a href="/Admin/UnscheduledStudents">Unscheduled Students</a>
+                                </li>
+                                <li class='js-analytics-dashboard'>
+                                    <a href="#">Shipping</a>
+                                </li>
+                            </ul>
+
+                        </li>
+
+                        @{
+                            if (LoginUser.IsTrainingSiteAdmin || LoginUser.IsWebManager)
+                            {
+                                <li class='sub-menu staff'>
+                                    <a href='#' role='button'>Clients</a>
+                                    <ul class='collapse' role='menu'>
+                                        <li class='js-analytics-dashboard'>
+                                            <a href="/Admin/Clients">Manage Clients</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/ClientActivity">Client Activity Report</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class='sub-menu items'>
+                                    <a href='#' role='button'>Instructors</a>
+                                    <ul class='collapse' role='menu' aria-expanded="false">
+                                        <li class='js-stock-items'>
+                                            <a href="/Admin/Instructors">Instructor Records</a>
+                                        </li>
+                                        <li class='js-button-layout'>
+                                            <a href="/Admin/AddUser?id=0&view=instructor">Add Instructor</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/ExpiringCertifications">Expiring Certifications</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Instructor Export</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class='sub-menu  analytics'>
+                                    <a href='#' role='button'>Reports</a>
+                                    <ul class='collapse' role='menu'>
+                                        <li>
+                                            <a href="/Admin/ActivityReport">Activity Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/ClassReport">Class Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/ProductAdonReport">Product Add-on Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/PaymentReport">Payment Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/PromocodeReport">Promo Code Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student Export</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Event Log</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class='sub-menu settings'>
+                                    <a href='#' role='button'>Settings</a>
+                                    <ul class='collapse' role='menu'>
+
+                                        <li>
+                                            <a href="/Admin/CourseTypes">Course Types</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/RegistrationAdOns">Product Add-ons</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/KeycodeBanks">Online Keycodes</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/PromoCodes">Promo  Codes</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/Locations">Locations</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/Taxes">Taxes</a>
+                                        </li>
+                                        <li>
+                                            <a href="/FileManager/Index">File Manager</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/SiteSetting">Site Settings</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="/Admin/CardSettings">Card Settings</a>
+                                        </li>
+                                        <li class='js-label-printing'>
+                                            <a href="/Admin/Certificates">Certificates</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Admin/EmailCampaigns">Email Campaigns</a>
+                                        </li>
+
+                                        <li >
+                                            <a href="/Admin/Users">Users</a>
+                                        </li>
+                                        @*<li class='group-heading'>Site Settings</li>
+                                            <li>
+                                                <a href="#">Basic Site Settings</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Registration Settings</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Custom Questions</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Custom Disciplines</a>
+                                            </li>*@
+
+
+                                    </ul>
+                                </li>
+
+                            }
+                        }
+
+
+
+                        <li class='sub-menu marketing'>
+                            <a href='#' role='button'>Help</a>
+                            <ul class='collapse' role='menu'>
+                                <li>
+                                    <a href="#">Frequently Asked Questions</a>
+                                </li>
+                                <li>
+                                    <a href="#">Support Request</a>
+                                </li>
+                                <li>
+                                    <a href="#">What's New</a>
+                                </li>
+                                <li>
+                                    <a href="#">Quick Start Guide</a>
+                                </li>
+                                <li>
+                                    <a href="#">Email Campaign Guide</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </nav>
+            </aside>
+            <div class='page-heading hide-for-print'>
+                <div class='page-heading-react'>
+                    <div class="CompanyName">
+                        @LoginUser.CompanyName
+                    </div>
+                    
+                </div>
+                <div class='controls'>
+                    @*  <div class='contact-support'>
+                            <a href='http://www.shopkeep.com/support' target='_blank'>Support</a>
+                            <a href='http://shop.shopkeep.com' target='_blank'>Shop</a>
+                            <a href='http://www.shopkeep.com/main-street-champions?extole_zone_name=champ_landing' target='_blank'>Refer &amp;Earn</a>
+                        </div>*@
+                    <div class='user-controls'>
+                        <div class='icon-and-email-container' data-toggle='dropdown' role='button'>
+                            @*data-target='#' *@
+                            <a class='user-icon' title='@LoginUser.FirstName @LoginUser.LastName'>
+                                <div class='owner-icon'></div>
+                            </a>
+                            <div class='user-email'>
+                                <div class='user-email__text' style="font-size:14px; color:#9d9d9d">@LoginUser.FirstName @LoginUser.LastName
+                                </div>
+                                <div class='user-email__caret'></div>
+                            </div>
+                            <span class='nav-caret'></span>
+                        </div>
+                        <ul class='dropdown-menu' role='menu'>
+                            @*<li class='min-width-display'>
+                                    <div class='user-email-mobile'>irfanibrahim1984@gmail.com</div>
+                                </li>*@
+                            @*<li>
+                                <a id="feedback-link" href="#">Registration</a>
+                            </li>*@
+                            @*<li class='min-width-display'>
+                                    <a href='http://www.shopkeep.com/support' target='_blank'>Support</a>
+                                </li>
+                                <li class='min-width-display'>
+                                    <a href='http://shop.shopkeep.com' target='_blank'>Shop</a>
+                                </li>
+                                <li class='min-width-display'>
+                                    <a href='http://www.shopkeep.com/main-street-champions?extole_zone_name=champ_landing' target='_blank'>Refer &amp;Earn</a>
+                                </li>*@
+                            <li class='js-manage-subscription'>
+                                <a href="/Admin/EditUser?id=@LoginUser.UserID&view=account">My Account</a>
+                            </li>
+                            <li class='js-manage-subscription'>
+                                <a href="/Admin/ChangePassword">Change Password</a>
+                            </li>
+
+                            <li class='log-out'>
+                                <a href="/Access/Login">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class='title-bar'></div>
+            <div id='content' style="padding-bottom:35px">
+                @RenderBody()
+            </div>
+        </div>
+      }
+      else
+      {
+           { Response.Redirect("~/Access/LogIn"); }
+      }
+      //else
+      //{
+      //    string eUserID = SmartSell.Helpers.Cookie.GetCookie("Default", "Token");
+      //    if (!string.IsNullOrWhiteSpace(eUserID))
+      //    {
+      //        int userid = Convert.ToInt32(SmartSell.DataOperations.Utilities.Common.CheckDuplicate(eUserID));
+      //        SmartSell.DataOperations.Authentication.AuthService authenticationService = new SmartSell.DataOperations.Authentication.AuthService();
+      //        userProfile = authenticationService.GetLoginData(userid);
+
+      //        Session["userProfile"] = userProfile;
+      //    }
+      //}
+}
+
+</body>
+
+</html>

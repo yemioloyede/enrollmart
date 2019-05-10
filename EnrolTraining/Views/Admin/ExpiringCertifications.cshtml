@@ -1,0 +1,99 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.User>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int days = ViewBag.days;
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Expiring Certifications</h1>
+</div>
+@Html.RenderFlashMessages()
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            @using (Html.BeginForm("ExpiringCertifications", "Admin", FormMethod.Post, new { @id = "form1", @class = "form-horizontal" }))
+            {
+                <div class="col-md-12">
+                    <div class="col-md-3" style="text-align:right">
+                        <label style="padding-top:10px">
+                            Show certifications expired in next 
+                        </label>
+                    </div>
+                    <div class="col-md-1">
+                        <input type="number" name="days" class="form-control" value="@days" />
+                    </div>
+                    <div class="col-md-1" style="padding:0px; max-width:40px">
+                        <label style="padding-top:10px">
+                            days
+                        </label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="submit" value="Go" class="btn btn-primary" />
+                    </div>
+
+                </div>
+            }
+
+            @*<div class="right-buttons">
+                <a href="#" class="btn btn-danger btn-xs">---</a>
+            </div>*@
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Instructor</th>
+                    <th>Certification</th>
+                    <th>Expires</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    Context db = new Context();
+                    foreach (var record in Model)
+                    {
+                        DateTime ExpirationAfterDays = DateTime.Today.AddDays(days);
+
+                        var query = (from certificates in db.InstructorCertification
+                                     join disciplines in db.Discipline on certificates.DisciplineID equals disciplines.DisciplineID
+                                     where certificates.InstructorID == record.UserID && certificates.Expires >= DateTime.Today && certificates.Expires <= ExpirationAfterDays
+                                     select new { Certification = disciplines.DisciplineName, Expires = certificates.Expires });
+
+                        var Certificates = string.Join(Environment.NewLine, query.ToList().Select(e => e.Certification).ToList());
+                        var expires = string.Join(Environment.NewLine, query.ToList().Select(e => e.Expires.ToString("MM/dd/yy")).ToList());
+                        string name = record.LastName + ((string.IsNullOrWhiteSpace(record.FirstName) || string.IsNullOrWhiteSpace(record.LastName)) ? "" : ",") + record.FirstName;
+                        string email = ((string.IsNullOrWhiteSpace(record.FirstName) || string.IsNullOrWhiteSpace(record.LastName)) ? record.EmailAddress : Environment.NewLine + record.EmailAddress);
+                        if (!string.IsNullOrWhiteSpace(expires))
+                        {
+                            <tr>
+                                <td>
+                                    @name
+                                    <span class="text-danger small">@Html.Raw(Html.Encode(email).Replace("\n", "<br />"))</span>
+                                </td>
+
+                                <td>@Html.Raw(Html.Encode(Certificates).Replace("\n", "<br />"))</td>
+                                <td>@Html.Raw(Html.Encode(expires).Replace("\n", "<br />")) </td>
+                                <td>
+                                    <a href="/Admin/EditInstructor?id=@record.UserID"> <span class="fa fa-edit"></span> </a>
+                                </td>
+                            </tr>
+
+                        }
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

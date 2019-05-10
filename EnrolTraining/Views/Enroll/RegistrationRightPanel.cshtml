@@ -1,0 +1,40 @@
+﻿@model EnrolTraining.Models.Company
+@{
+    Layout = null;
+}
+
+<div class="col-md-3">
+    <div class="col-md-12" style="margin-bottom:50px">
+        <h4>
+            Secure Site
+        </h4>
+        <hr style="margin:5px" />
+        <span class="fa fa-shield" style="float:left; margin-right:10px; color:orange; font-size:100px"></span>
+        <span>Please be assured that your information is protected and secure. We value your privacy and do not provide customer information to any third parties</span>
+    </div>
+    <div class="col-md-12">
+        <h4>Contact Us</h4>
+        <hr style="margin:5px" />
+        <strong class="clearfix">
+            @Model.CompanyName
+        </strong>
+        <strong class="clearfix">
+            @Model.TagLine
+        </strong>
+        <span class="clearfix">
+            @Model.Address1
+        </span>
+        <span class="clearfix">
+            @Model.Address2
+        </span>
+        <span class="clearfix">
+            @Model.City, @Model.State @Model.Zip
+        </span>
+        <br />
+        <span class="fa fa-phone"></span>
+        <span>@Model.Phone</span>
+        <br />
+        <span class="fa fa-envelope"></span>
+        <span class="text-danger">@Model.Email</span>
+    </div>
+</div>

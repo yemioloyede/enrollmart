@@ -1,0 +1,602 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.SiteSetting
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<script src="~/Scripts/tinymce/tinymce.min.js"></script>
+<script src="~/Scripts/edtr.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+     var urlobj;
+     function BrowseServer(obj)
+     {
+          urlobj = obj;
+          OpenServerBrowser(
+          '/index.html',
+          screen.width * 0.7,
+          screen.height * 0.7 ) ;
+     }
+
+     function OpenServerBrowser( url, width, height )
+     {
+          var iLeft = (screen.width - width) / 2 ;
+          var iTop = (screen.height - height) / 2 ;
+          var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
+          sOptions += ",width=" + width ;
+          sOptions += ",height=" + height ;
+          sOptions += ",left=" + iLeft ;
+          sOptions += ",top=" + iTop ;
+          var oWindow = window.open( url, "BrowseWindow", sOptions ) ;
+     }
+
+     function SetUrl( url, width, height, alt )
+     {
+          document.getElementById(urlobj).value = url ;
+          oWindow = null;
+     }
+</script>
+
+
+<script>
+    $(document).ready(function (e) {
+
+    })
+</script>
+
+<style>
+    input, select, textarea{
+        /*max-width:380px;*/
+    }
+</style>
+
+<div class='page-title'>
+    <h1>Site Settings</h1>
+</div>
+@Html.RenderFlashMessages()
+@*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+            Company Setting
+        </div>
+    </div>
+
+    <div class="FormWrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    @using (Html.BeginForm("UpdateCompanySetting", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.CompanyName, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.CompanyName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Company.CompanyName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.TagLine, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.TagLine, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.ContactFirstName, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.ContactFirstName, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.ContactLastName, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.ContactLastName, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.Email, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Company.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.Website, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.Website, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.Phone, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.Phone, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.Fax, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.Fax, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.Address1, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.Address1, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.Address2, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.Address2, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.City, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.City, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.State, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.Company.State, DropdownLists.SelectUSAStates(Model == null ? "0" : "0", true, "-Select-"), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.Zip, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.Zip, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.TimeZone, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.Company.TimeZone, DropdownLists.TimeZones(Model.Company == null ? "" : Model.Company.TimeZone!= null ? Model.Company.TimeZone : "", true, "-Select-"), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company.TrainingCenter, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Company.TrainingCenter, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+
+
+                        <hr style="border-color:#e8e6e6" />
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9 text-right">
+                                <input type="submit" value="Update Settings" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                    }
+
+                </section>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class='clear'></div>
+
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+            Registration Setting
+        </div>
+    </div>
+
+    <div class="FormWrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    @using (Html.BeginForm("UpdateEnrollSetting", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+                        @Html.HiddenFor(m=> m.EnrolSetting.ID)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.SiteName, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                <label style="padding-top:7px">
+                                    @Html.DisplayFor(m => m.EnrolSetting.SiteName, new { @class = "form-control" })
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.SchedulePageFormat, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.EnrolSetting.SchedulePageFormat, DropdownLists.SchedulePageFormat(Model.EnrolSetting == null ? "0" : Model.EnrolSetting.SchedulePageFormat.ToString(), false, "-Select-"), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Registration Links", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @{ 
+                                    string link1 = "//" + Model.EnrolSetting.SiteName + "." + Request.Url.Host;
+                                    string link2 = "//" + Model.EnrolSetting.SiteName + "." + Request.Url.Host + "/Schedule";
+                                    string link3 = "//" + Model.EnrolSetting.SiteName + "." + Request.Url.Host + "/Calendar";
+                                    string link4 = "//" + Model.EnrolSetting.SiteName + "." + Request.Url.Host + "/DualCalendar";
+                                }
+                                <div style="border:1px solid lightgray; padding:10px 10px 10px 10px; border-radius:5px; background-color:white">
+                                    <label> <a class="text-danger" href="@link1"><strong> https:@link1</strong></a></label><br />
+                                    <label> <a class="text-danger" href="@link2"><strong> https:@link2</strong></a></label><br />
+                                    <label> <a class="text-danger" href="@link3"><strong> https:@link3</strong></a></label><br />
+                                    <label> <a class="text-danger" href="@link4"><strong> https:@link4</strong></a></label><br />
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("ICal Feed URL", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                <label class="text-danger" style="padding-top:7px"> <a class="text-danger" href="/Admin/iCal"><strong>https://enrollmart.com/iCal</strong></a> </label><br />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.SchedulePageText, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(m => m.EnrolSetting.SchedulePageText, 7, 0, new { @class = "form-control clientEditor" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.UseAccordianOnSchedule, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                <div style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.EnrolSetting.UseAccordianOnSchedule, new { @style = "margin-top:1px;", @checked = "checked" })
+                                            Use an accordian display on the class schedule page
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.EnrolSetting.AgreeTermsForRegistrants, new { @style = "margin-top:1px;", @checked = "checked"})
+                                            Require registrants to agree to the terms and conditions
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.EnrolSetting.DisplayClassEndTime, new { @style = "margin-top:1px;", @checked = "checked" })
+                                            Display class end times in the schedule
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.EnrolSetting.ShowPromoCode, new { @style = "margin-top:1px;" })
+                                            Show promo codes in the 'codes' column of student lists
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.EnrolSetting.RestrictInstructorsForOthersClasses, new { @style = "margin-top:1px;" })
+                                            Restrict instructors (non-admins) to only view classes they teach
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.EnrolSetting.CloseRegistrationBeforeClassStart, new { @style = "margin-top:1px;" })
+                                            Enable class registrations to be closed prior to class start time
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.EnrolSetting.PrintTermsInStudentReceipt, new { @style = "margin-top:1px;" })
+                                            Pring the terms and conditions in the student receipt
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.LogoUrl, new { @class = "col-md-3 control-label" })
+                            <div>
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(m => m.EnrolSetting.LogoUrl, new { @class = "form-control", @id = "LogoUrl" })
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-default text-center" onclick="BrowseServer('LogoUrl');">Pick File</button>
+                            </div>
+                                </div>
+                            <div  class="col-md-offset-3 col-md-9" style="padding:6px 16px; ">
+                                <span class="small">Must be 90px high and no more than 500px wide with a transparent background</span>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.ContactUsEmail, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.EnrolSetting.ContactUsEmail, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.EnrolSetting.ContactUsEmail, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.MailForm, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.EnrolSetting.MailForm, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.EnrolSetting.MailForm, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.DisplayName, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.EnrolSetting.DisplayName, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.PaypalEmail, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.EnrolSetting.PaypalEmail, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.EnrolSetting.PaypalEmail, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.StripeLiveSecretKey, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.EnrolSetting.StripeLiveSecretKey, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.GoogleAnalyticsAccount, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(m => m.EnrolSetting.GoogleAnalyticsAccount, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4">
+                                <div class="checkbox" style="padding-top: 12px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.EnrolSetting.UseUniversalAnalyticsTag, new { @style = "margin-top:1px;", @checked = "checked" })
+                                        Use Universal Analytics Tag
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.ClassIDGenerationMethod, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.EnrolSetting.ClassIDGenerationMethod, DropdownLists.ClassIDNumbersGenerationMethod(Model.EnrolSetting == null ? "0" : Model.EnrolSetting.ClassIDGenerationMethod.ToString(), false, "-Select-"), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.ConfirmationScript, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(m => m.EnrolSetting.ConfirmationScript, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.TermsCondition, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(m => m.EnrolSetting.TermsCondition, 7, 0, new { @class = "form-control clientEditor" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.CustomerSidebar, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(m => m.EnrolSetting.CustomerSidebar, 7, 0, new { @class = "form-control clientEditor" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EnrolSetting.CheckinPassword, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.EnrolSetting.CheckinPassword, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Check-in Link", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @{
+                                    string link = Request.Url.Scheme + "//" + Model.EnrolSetting.SiteName + "." + Request.Url.Host  + "/checkin";
+                                }
+
+                                <label class="text-danger" style="padding-top:7px"><strong>@link</strong></label><br />
+                            </div>
+                        </div>
+
+
+
+                        <hr style="border-color:#e8e6e6" />
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9 text-right">
+                                <input type="submit" value="Update Settings" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                    }
+
+                </section>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class='clear'></div>
+
+
+<div class="content-box">
+    <div class="content-box-hdr" style="border-bottom:0px">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+            Custom Registration Questions
+
+            <div class="right-buttons" style="margin-bottom:8px">
+                <a href="/Admin/AddEnrollQuestion" class="btn btn-danger btn-xs">New Question</a>
+            </div>
+        </div>
+
+        @{
+            if (Model.EnrolQuestions != null && Model.EnrolQuestions.Count() > 0)
+            {
+                <div style="padding:20px; background-color:white; padding-bottom:10px">
+                    <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                        <thead>
+                            <tr>
+                                <th >
+                                    Question
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    Answer Choices
+                                </th>
+                                <th >
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @{
+
+                                foreach (var record in Model.EnrolQuestions)
+                                {
+                                    string type = EnrolTraining.DropdownLists.GetEnumDescription((EnrolTraining.Common.EnumModel.EnrollQuestionType)record.Type);
+                                    <tr>
+                                        <td>
+                                            @record.Question
+                                        </td>
+                                        <td>               
+                                            @type
+                                        </td>
+                                        <td>
+                                            @record.Answers
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/EditEnrollQuestion?id=@record.QuestionID"> <span class="fa fa-edit"></span> </a>
+                                            <a href="/Admin/DeleteEnrollQuestion?id=@record.QuestionID"> <span class="fa fa-trash"></span> </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+             }
+        }
+
+    </div>
+
+</div>
+<div class='clear'></div>
+
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+            Custom Disciplines
+        </div>
+    </div>
+    <div style="padding:20px;">
+        @using (Html.BeginForm("AddCustomDiscipline", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+            <p style="padding-bottom:20px; line-height:16px">
+                Custom disciplines allow you to add additional course disciplines to your Enrollware system which are used in the instructor Tracking module.
+                The standard disciplines in the system are as follows: ACLS, BLS for Healthcare Provider, PALS, Heartsaver, EMS, and NRP. Feel free to add
+                other that you need.
+            </p>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.Discipline.DisciplineName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Discipline.DisciplineName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-9">
+                    <input type="submit" value="Add" class="btn btn-danger text-left " />
+                </div>
+            </div>
+        }
+
+        @{
+            if (Model.Disciplines != null && Model.Disciplines.Count() > 0)
+            {
+                <div style="padding:20px; background-color:white; padding-bottom:10px">
+                    <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                        <thead>
+                            <tr>
+                                <th class="col-md-9">
+                                    Discipline Name
+                                </th>
+                                <th class="col-md-3">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @{
+
+                                foreach (var record in Model.Disciplines)
+                                {
+                                    <tr>
+                                        <td>
+                                            @record.DisciplineName
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/DeleteDiscipline?id=@record.DisciplineID"> <span class="fa fa-trash"></span> </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+                                }
+        }
+
+        </div>
+
+
+
+
+
+    </div>
+<div class='clear'></div>
+

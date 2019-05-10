@@ -1,0 +1,258 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.PromocodeReportFilters
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Context db = new Context();
+    string showrange = Model != null && Model.DateCriteria == "Custom Range" ? "true" : "false";
+
+    var query = from schedule in db.ScheduleClass
+                join course in db.CourseType on schedule.CourseID equals course.CourseTypeID
+                join student in db.Student on schedule.ClassID equals student.ClassID
+                where schedule.CompanyID == EnrolTraining.Common.SessionWrapper.Current.CompanyID && student.PromoCode.Length > 0
+                select new {StudentID = student.StudentID, ClassID = schedule.ClassID, ClassDate = schedule.ScheduleDate, ClassTime = schedule.StartTime, FirstName = student.FirstName, LastName = student.LastName, Course = course.CourseName, RegistrationDate = student.RegisterionDate, Status = student.StatusID, Promocode = student.PromoCode, PromocodeID = student.PromoCodeID};
+
+    if (Model.CodeID > 0)
+    {
+        query = query.Where(x => x.PromocodeID == Model.CodeID);
+    }
+
+    int month = 0, year = 0;
+    if (Model.DateCriteria == "This Month")
+    {
+        month = DateTime.Now.Month;
+        year = DateTime.Now.Year;
+        if (Model.DateType == "Registration Dates")
+        {
+            query = query.Where(x => x.RegistrationDate.Month == month && x.RegistrationDate.Year == year);
+        }
+        else
+        {
+            query = query.Where(x => x.ClassDate.Month == month && x.ClassDate.Year == year);
+        }
+    }
+    if (Model.DateCriteria == "Last Month")
+    {
+        DateTime dt = DateTime.Now.AddMonths(-1);
+        month = dt.Month;
+        year = dt.Year;
+        if (Model.DateType == "Registration Dates")
+        {
+            query = query.Where(x => x.RegistrationDate.Month == month && x.RegistrationDate.Year == year);
+        }
+        else
+        {
+            query = query.Where(x => x.ClassDate.Month == month && x.ClassDate.Year == year);
+        }
+    }
+    if (Model.DateCriteria == "This Year")
+    {
+        year = DateTime.Today.Year;
+        if (Model.DateType == "Registration Dates")
+        {
+            query = query.Where(x => x.RegistrationDate.Year == year);
+        }
+        else
+        {
+            query = query.Where(x => x.ClassDate.Year == year);
+        }
+    }
+    if (Model.DateCriteria == "Last Year")
+    {
+        DateTime dt = DateTime.Now.AddYears(-1);
+        year = dt.Year;
+
+        if (Model.DateType == "Registration Dates")
+        {
+            query = query.Where(x => x.RegistrationDate.Year == year);
+        }
+        else
+        {
+            query = query.Where(x => x.ClassDate.Year == year);
+        }
+    }
+    if (Model.DateCriteria == "Custom Range")
+    {
+        if (Model.DateType == "Registration Dates")
+        {
+            query = query.Where(x => x.RegistrationDate >= Model.DateForm.Date && x.RegistrationDate <= Model.DateTo.Date);
+        }
+        else
+        {
+            query = query.Where(x => x.ClassDate >= Model.DateForm.Date && x.ClassDate <= Model.DateTo.Date);
+        }
+    }
+
+    var lstPromoCodes = query.ToList();
+
+}
+
+<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        var isShowRange = @showrange;
+        if (isShowRange == true)
+        {
+            $('#range').show();
+        }
+        else
+        {
+            $('#range').hide();
+        }
+
+        $(document).on('click', '#searchrange', function (e) {
+            var form = $('#filterForm');
+            form.submit();
+
+        });
+
+        jQuery('#DateForm').datetimepicker({
+        format: 'Y/m/d',
+            onShow: function (ct) {
+                this.setOptions({
+                maxDate: jQuery('#DateTo').val() ? jQuery('#DateTo').val() : new Date(new Date().setDate(new Date().getDate()-1))
+                })
+            },
+            timepicker: false
+        });
+
+        jQuery('#DateTo').datetimepicker({
+        format: 'Y/m/d',
+            maxDate: new Date(new Date().setDate(new Date().getDate()-1)),
+            onShow: function (ct) {
+                this.setOptions({
+                minDate: jQuery('#DateForm').val() ? jQuery('#DateForm').val() : false
+                })
+            },
+            timepicker: false
+        });
+
+        tblsetup('#tbl', true, true, true, -1);
+
+        $('#DateCriteria').change(function (e) {
+            var criteria = $(this).val();
+            if (criteria == "Custom Range")
+            {
+                $('#range').show();
+            }
+            else
+            {
+                $('#range').hide();
+                var form = $('#filterForm');
+                form.submit();
+            }
+        })
+
+        $('#DateType').change(function (e) {
+            var form = $('#filterForm');
+            form.submit();
+        })
+
+        $('#CodeID').change(function (e) {
+            var form = $('#filterForm');
+            form.submit();
+        })
+
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Payment Report</h1>
+</div>
+
+@Html.RenderFlashMessages()
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+
+            <form id="filterForm" method="post" action="/Admin/PromocodeReport" class="form-horizontal">
+                <div class="modal fade" id="MyModel" aria-hidden="true">
+                    <div id="MyModelcontainer"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(m => m.DateType, EnrolTraining.DropdownLists.PromocodeDateTypes(Model.DateType, false), new { @class = "form-control", @style = "height:28px" })
+                        </div>
+
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(m => m.CodeID, EnrolTraining.DropdownLists.AllPromoCodes(Model.CodeID.ToString(), true, "All Codes"), new { @class = "form-control", @style = "height:28px" })
+                        </div>
+
+
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(m => m.DateCriteria, EnrolTraining.DropdownLists.ClientDatesFilter(Model.DateCriteria, false), new { @class = "form-control", @style = "height:28px" })
+                        </div>
+
+                        <div class="col-md-4" id="range" style="display:none">
+                            <div>
+                                <div class="input-group input-daterange">
+                                    @Html.TextBoxFor(m => m.DateForm, new { @class = "form-control", @style = "height:28px" })
+                                    @Html.ValidationMessageFor(m => m.DateForm, "", new { @class = "text-danger" })
+
+
+                                    <div class="input-group-addon">to</div>
+
+                                    @Html.TextBoxFor(m => m.DateTo, new { @class = "form-control", @style = "height:28px" })
+                                    @Html.ValidationMessageFor(m => m.DateTo, "", new { @class = "text-danger" })
+
+                                    <div class="input-group-addon" id="searchrange">
+                                        <span style="cursor:pointer" class="fa fa-search"></span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="col-md-2 text-right">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Reg Date</th>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Status</th>
+                    <th>Promo Code</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in lstPromoCodes)
+                    {
+                        string status = EnrolTraining.DropdownLists.GetEnumDescription((EnrolTraining.Common.EnumModel.StudentStatus) (string.IsNullOrWhiteSpace(record.Status.ToString()) ? 1 : record.Status));
+                        <tr>
+                            <td>@record.RegistrationDate.ToString("ddd M/d/yy H:m tt")</td>
+                            <td>@record.LastName, @record.FirstName</td>
+                            <td>@record.Course <br /> <a href="/Admin/EditClass?id=@record.ClassID"> <span class="small" style="color:red">@record.ClassDate.ToString("ddd MM/dd/yyyy") @record.ClassTime</span> </a></td>
+                            <td>@status</td>
+                            <td>@record.Promocode</td>
+                            <td>
+                                <a href="/Admin/EditStudent?id=@record.StudentID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

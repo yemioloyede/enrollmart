@@ -1,0 +1,501 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.ScheduleClass
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    int clsid = Model == null ? 0 : Model.ClassID;
+}
+<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="~/css/fileinput.css" />
+<script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
+<style>
+    .kv-file-content{
+        display:none;
+    }
+
+    .fileinput-remove{
+        display:none;
+    }
+</style>
+
+
+
+<script>
+
+
+    function AddClassTime() {
+        $('.fa-trash').hide();
+        var container = $('#ClassTimeContainer');
+        var number = container.find('.col-md-10').length;
+        var els = '<div class="col-md-10 col-md-offset-2"><div class="col-md-3" style="padding-left:0px"><input class="form-control" data-val="true" data-val-required="Please select a start date" id="ClassDate' + number + '" name="ClassDate[' + number + ']" type="text" value=""><span class="text-danger" data-valmsg-for="ClassDate[' + number + ']" data-valmsg-replace="true"></span></div><div class="col-md-1" style="top:10px; text-align:right"><span>From</span></div><div class="col-md-3" style="padding-left:0px; "><input class="form-control" data-val="true" data-val-required="Please select Time From" id="TimeFrom' + number + '" name="TimeFrom[' + number + ']" type="text" value="" ><span class="text-danger" data-valmsg-for="TimeFrom[' + number + ']" data-valmsg-replace="true"></span></div><div class="col-md-1" style="top:10px; text-align:right"><span>To</span></div><div class="col-md-3" style="padding-left:0px;"> <input class="form-control" data-val="true" data-val-required="Please select Time To" id="TimeTo' + number + '" name="TimeTo[' + number + ']" type="text" value=""><span class="text-danger" data-valmsg-for="TimeTo[' + number + ']" data-valmsg-replace="true"></span></div><div class="col-md-1" style="top:10px;"> <span class="fa fa-trash" style="color:red; cursor:pointer"></span></div></div>';
+        container.append(els);
+
+        var form = $('#myform').removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse(form);
+
+
+        $("input[id^='ClassDate']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+            startDate: new Date(),
+        });
+
+        jQuery("input[id^='TimeFrom']").datetimepicker({
+            datepicker: false,
+            format: 'g:i A',
+            formatTime: 'g:i A',
+            step: 15,
+        });
+
+        jQuery("input[id^='TimeTo']").datetimepicker({
+            datepicker: false,
+            format: 'g:i A',
+            formatTime: 'g:i A',
+            step: 15,
+        });
+
+    }
+
+    $(document).ready(function (e) {
+
+        $(document).on('click', '#linkEmails', function () {
+            var emails = []; 
+            $('.studentemail').each(function(i,e){
+                var email = $(e).text();
+                emails.push(email);
+            })
+            emails = emails.join('; ');
+            $('#EmailsArea').val(emails);
+            $('#EmailsModal').modal('show');
+        })
+
+        $('input[type=radio]').change(function () {
+            var selected = this.value;
+            if (selected == "Commas") {
+                var mails = $('#EmailsArea').val();
+                mails = mails.replace(/\;/g, ',');
+                $('#EmailsArea').val(mails);
+            }
+            else
+            {
+                var mails = $('#EmailsArea').val();
+                mails = mails.replace(/\,/g, ';');
+                $('#EmailsArea').val(mails);
+            }
+
+        })
+
+        var $input = $("#documents");
+        $input.fileinput({
+            uploadUrl: "/Admin/UploadClassDocuments?ClassID=@clsid", // server upload action
+            uploadAsync: false,
+            showPreview: false,
+            showUpload: false, // hide upload button
+            showRemove: false, // hide remove button
+            //allowedFileExtensions: ['jpg', 'png', 'gif'],
+            minFileCount: 1,
+            maxFileCount: 5,
+        }).on("filebatchselected", function (event, files) {
+            $input.fileinput('upload');
+        }).on('filebatchuploadsuccess', function (event, data) {
+            $.get("/Admin/GetClassDocs?ClassID=@clsid", function (data) {
+                $('#docsuploaded').html(data);
+            });
+
+        });
+
+        $(document).on('click', '.fa-trash', function () {
+            var row = $(this).closest('.col-md-10');
+            row.prev().find('.fa-trash').show();
+            row.remove();
+        })
+
+        $(document).on('click', '.fffuuu', function () {
+            var file = $(this).attr('data-file'); // the id that's given to each button in the list
+            var url = '@Url.Action("DeleteClassDocs", "Admin")?FileName=' + encodeURIComponent('' + file + '') + '&ClassID=' + @clsid;
+            $.get( url , function (data) {
+                $('#docsuploaded').html(data);
+            });
+        });
+
+
+        $("input[id^='ClassDate']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+            startDate: new Date(),
+        });
+
+        jQuery("input[id^='TimeFrom']").datetimepicker({
+            datepicker: false,
+            format: 'g:i A',
+            formatTime: 'g:i A',
+            step: 15,
+        });
+
+        jQuery("input[id^='TimeTo']").datetimepicker({
+            datepicker: false,
+            format: 'g:i A',
+            formatTime: 'g:i A',
+            step: 15,
+        });
+
+
+    })
+</script>
+
+@{
+    if (Model!= null && Model.ClassID > 0)
+    {
+        <div class='page-title'>
+            <h1>@Model.CourseName</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3 style="float:left; margin-left:5px; margin-top:0px; font-size:15px; color:#485a6f">@Model.ScheduleDate.ToString("ddd M/d/yyyy") from @Model.StartTime to @Model.EndTime</h3>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class='page-title'>
+            <h1>Schedule a Class</h1>
+        </div>
+
+    }
+}
+
+@Html.RenderFlashMessages()
+
+
+
+
+@{ 
+    if (Model!= null && Model.ClassID > 0)
+    {
+        Html.RenderAction("RegisteredStudents", "Admin", new { ClassID = Model.ClassID });
+    }
+}
+
+<div class="content-box">
+<div class="content-box-hdr">
+    <div class="content-hdr-form" style="padding-top:8px; font-size:14px">
+            <span id="mainContent_filterfields">
+                Class Detail
+            </span>
+            <div class="right-buttons" style="padding-top:0px; margin-bottom:8px">
+                @{
+                    if (Model != null && Model.ClassID > 0)
+                    {
+                        <a href="/Admin/RepeatClass?id=@Model.ClassID" class="btn btn-danger btn-xs">Repeat this class</a>
+                    }
+                }
+            </div>
+
+    </div>
+</div>
+    <div class="FormWrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    @using (Html.BeginForm("ScheduleClass", "Admin", null, FormMethod.Post, new { @id = "myform", @class = "form-horizontal", role = "form", @enctype = "multipart/form-data" }))
+                    {
+                        @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+                        @Html.Hidden("ClassID", Model == null ? 0 : Model.ClassID)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.CourseID, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(m => m.CourseID, DropdownLists.CoursTypes(Model == null ? "0" : Model.CourseID.ToString(), true, "--Choose--"), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.CourseID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        {
+                            if (EnrolTraining.Common.SessionWrapper.Current.ClassNumberSetting == 3)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.ClassNo, new { @class = "col-md-2 control-label" })
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.ClassNo, new { @class = "form-control NumberField" })
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+                        {
+                            if (EnrolTraining.Common.SessionWrapper.Current.ClassNumberSetting == 1 && Model != null && Model.ClassID > 0)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.ClassNo, new { @class = "col-md-2 control-label" })
+                                    <div class="col-md-10">
+                                        <label style="padding-top:7px">@Model.ClassNo</label>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+                        {
+                            if (Model != null && Model.ClassID > 0)
+                            {
+                                string reglink = Request.Url.Scheme + "//" + EnrolTraining.Common.SessionWrapper.Current.SubDomain + "." + Request.Url.Host + "/ClassDetail?id=" + Model.ClassID;
+                                string reghref = "//" + EnrolTraining.Common.SessionWrapper.Current.SubDomain + "." + Request.Url.Host + "/ClassDetail?id=" + Model.ClassID;
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.RegistrationLink, new { @class = "col-md-2 control-label" })
+                                    <div class="col-md-10">
+                                      <label style="padding-top:7px; font-weight:normal"><a href="@reghref" class="text-danger">@reglink</a></label>  
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+
+                            <div class="form-group">
+                                    @Html.LabelFor(m => m.ClientID, new { @class = "col-md-2 control-label" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(m => m.ClientID, DropdownLists.Clients(Model == null ? "0" : Model.ClientID.ToString(), true, "None"), new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.LocationID, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(m => m.LocationID, DropdownLists.Locations(Model == null ? "0" : Model.LocationID.ToString(), false), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.LocationID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.InstructorID, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(m => m.InstructorID, DropdownLists.Instructors(Model == null ? "0" : Model.InstructorID.ToString(), true, "--Choose--"), new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ClassDate, new { @class = "col-md-2 control-label" })
+                                <div id="ClassTimeContainer">
+
+                                    @{
+                                        int count = Model == null ? 0 : Model.ClassDate.Count();
+                                        int i = 0;
+                                        do
+                                        {
+                                            string dd = Model == null ? "" : Model.ClassDate[i].ToString("MM/dd/yy");
+                                            string tf = Model == null ? "" : Model.TimeFrom[i];
+                                            string tt = Model == null ? "" : Model.TimeTo[i];
+                                            string offset = i > 0 ? "col-md-offset-2" : "";
+                                            <div class="col-md-10  @offset">
+                                                <div class="col-md-3" style="padding-left:0px">
+                                                    <input class="form-control" data-val="true" data-val-required="Please select a start date" id="ClassDate" @i name="ClassDate[@i]" type="text" value="@dd">
+                                                    <span class="text-danger" data-valmsg-for="ClassDate[@i]" data-valmsg-replace="true"></span>
+                                                </div>
+                                                <div class="col-md-1" style="top:10px; text-align:right">
+                                                    <span>From</span>
+                                                </div>
+                                                <div class="col-md-3" style="padding-left:0px; ">
+                                                    <input class="form-control" data-val="true" data-val-required="Please select time from" id="TimeFrom" @i name="TimeFrom[@i]" type="text" value="@tf">
+                                                    <span class="text-danger" data-valmsg-for="TimeFrom[@i]" data-valmsg-replace="true"></span>
+                                                </div>
+                                                <div class="col-md-1" style="top:10px; text-align:right">
+                                                    <span>To</span>
+                                                </div>
+                                                <div class="col-md-3" style="padding-left:0px;">
+                                                    <input class="form-control" data-val="true" data-val-required="Please select time to" id="TimeTo" @i name="TimeTo[@i]" type="text" value="@tt">
+                                                    <span class="text-danger" data-valmsg-for="TimeTo[@i]" data-valmsg-replace="true"></span>
+                                                </div>
+                                                @if (i == 0)
+                                                {
+                                                    <div class="col-md-1" style="top:10px;">
+                                                        <span class="fa fa-plus" style="color:green; cursor:pointer" onclick="AddClassTime()"></span>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    string show = (i == count - 1) ? "block" : "none";
+                                                    <div class="col-md-1" style="top:10px; ">
+                                                        <span class="fa fa-trash" style="color:red; cursor:pointer; display:@show"></span>
+                                                    </div>
+                                                }
+                                            </div>
+                                            i++;
+                                        }
+                                        while (i < count);
+                                    }
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Price, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control NumberField" })
+                                    @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.ClassDuration, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.ClassDuration, new { @class = "form-control NumberField" })
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.MaxStudents, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.MaxStudents, new { @class = "form-control NumberField" })
+                                    @Html.ValidationMessageFor(m => m.MaxStudents, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.StudentManikinRatio, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(m => m.StudentManikinRatio, DropdownLists.StudentManikinRatio(Model == null ? "0" : Model.StudentManikinRatio.ToString(), false), new { @class = "form-control NumberField" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.IncludeOnline, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    <div style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                        <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                            <label>
+                                                @Html.CheckBoxFor(m => m.IncludeOnline, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                Include in the online class catalog
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.IsAllowedRegistrationWithoutPayment, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    <div style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                        <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                            <label>
+                                                @Html.CheckBoxFor(m => m.IsAllowedRegistrationWithoutPayment, new { @style = "margin-top:1px;" })
+                                                Allowed Payment on Arrival
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.AssistantID, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(m => m.AssistantID, DropdownLists.Assistants(Model == null ? "0" : Model.AssistantID.ToString(), true, "Click to Select"), new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.PublicNotes, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(m => m.PublicNotes, 5, 0, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.InternalNotes, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(m => m.InternalNotes, 5, 0, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                                        {
+                                            if (Model != null && Model.ClassID > 0)
+                                            {
+                                                <div class="form-group">
+                                                    @Html.Label("Documents", new { @class = "col-md-2 control-label" })
+                                                    <div class="col-md-10">
+                                                        <input id="documents" type="file" name="Documents[]" class="file-loading" data-elErrorContainer="#fileerror"   multiple />
+                                                        <div id="fileerror"></div>
+                                                        <div id="docsuploaded">
+                                                            @Html.Action("GetClassDocs", "Admin", new { ClassID = Model.ClassID})
+                                                        </div>
+                                                        @*<label class="btn btn-default">
+                                                            <input id="file-selector" multiple name="Documents[]" type="file" style="display:none" >
+                                                            Upload Documents
+                                                        </label>
+                                                        <span class='label label-info' id="upload-file-info"></span>*@
+
+                                                    </div>
+                                                </div>
+
+                                            }
+                                        }
+
+                            <hr style="border-color:#e8e6e6" />
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10 text-right">
+                                    <a href="/Admin/UpcomingClasses" class="btn btn-default">Back</a>
+                                    <input type="submit" value="Save" class="btn btn-success" />
+                                </div>
+                            </div>
+
+                      }
+                </section>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+<div class='clear'></div>
+
+<div id="EmailsModal" class="modal fade">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form action="/Admin/AddStudent" method="post" class="form-horizontal">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <span style="font-size:large" class="modal-title">Copy and paste the address from the box below into your program</span>
+                </div>
+                <div class="modal-body" style="padding-right:35px">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <textarea id="EmailsArea" class="form-control" style="height:70px; " ></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="float:left; padding:10px 10px 0px 10px; background-color:white">
+                                <div class="col-md-6">
+                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.RadioButton("Delimeter", "Semicolons", true, new { @style = "margin-top:1px;" })
+                                            SemiColons
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.RadioButton("Delimeter", "Commas", false, new { @style = "margin-top:1px;" })
+                                            Commas
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>*@
+            </form>
+
+        </div>
+
+    </div>
+</div>

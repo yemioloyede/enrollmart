@@ -1,0 +1,193 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.ReportFilters
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Context db = new Context();
+    string showrange = Model != null && Model.DateCriteria == "Custom Range" ? "true" : "false";
+
+
+    var query = from courseAddon in db.CourseAdon
+                join student in db.Student on courseAddon.StudentID equals student.StudentID
+                where student.CompanyID == EnrolTraining.Common.SessionWrapper.Current.CompanyID
+                select new { AdonID = courseAddon.AdonID, RegistrationDate = courseAddon.RegisterDate, AdonPrice = courseAddon.Price };
+
+    int month = 0, year = 0;
+    if (Model.DateCriteria == "This Month")
+    {
+        month = DateTime.Now.Month;
+        year = DateTime.Now.Year;
+        query = query.Where(x => x.RegistrationDate.Month == month && x.RegistrationDate.Year == year);
+    }
+    if (Model.DateCriteria == "Last Month")
+    {
+        DateTime dt = DateTime.Now.AddMonths(-1);
+        month = dt.Month;
+        year = dt.Year;
+        query = query.Where(x => x.RegistrationDate.Month == month && x.RegistrationDate.Year == year);
+    }
+    if (Model.DateCriteria == "This Year")
+    {
+        year = DateTime.Today.Year;
+        query = query.Where(x => x.RegistrationDate.Year == year);
+    }
+    if (Model.DateCriteria == "Last Year")
+    {
+        DateTime dt = DateTime.Now.AddYears(-1);
+        year = dt.Year;
+        query = query.Where(x => x.RegistrationDate.Year == year);
+    }
+    if (Model.DateCriteria == "Custom Range")
+    {
+        query = query.Where(x => x.RegistrationDate >= Model.DateForm.Date && x.RegistrationDate <= Model.DateTo.Date);
+    }
+
+    var lstCourseAddons = query.ToList();
+
+    var addoons = db.RegistrationAdOn.Where(x => x.CompanyID == EnrolTraining.Common.SessionWrapper.Current.CompanyID);
+
+}
+
+<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        var isShowRange = @showrange;
+        if (isShowRange == true)
+        {
+            $('#range').show();
+        }
+        else
+        {
+            $('#range').hide();
+        }
+
+        $(document).on('click', '#searchrange', function (e) {
+            var form = $('#filterForm');
+            form.submit();
+
+        });
+
+        jQuery('#DateForm').datetimepicker({
+            format: 'Y/m/d',
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: jQuery('#DateTo').val() ? jQuery('#DateTo').val() : new Date(new Date().setDate(new Date().getDate()-1))
+                })
+            },
+            timepicker: false
+        });
+
+        jQuery('#DateTo').datetimepicker({
+            format: 'Y/m/d',
+            maxDate: new Date(new Date().setDate(new Date().getDate()-1)),
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: jQuery('#DateForm').val() ? jQuery('#DateForm').val() : false
+                })
+            },
+            timepicker: false
+        });
+
+        tblsetup('#tbl', true, true, true, -1);
+
+        $('#DateCriteria').change(function (e) {
+            var criteria = $(this).val();
+            if (criteria == "Custom Range")
+            {
+                $('#range').show();
+            }
+            else
+            {
+                $('#range').hide();
+                var form = $('#filterForm');
+                form.submit();
+            }
+        })
+
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Product Add-on Report</h1>
+</div>
+
+@Html.RenderFlashMessages()
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+
+            <form id="filterForm" method="post" action="/Admin/ProductAdonReport" class="form-horizontal">
+                <div class="modal fade" id="MyModel" aria-hidden="true">
+                    <div id="MyModelcontainer"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(m => m.DateCriteria, EnrolTraining.DropdownLists.ClientDatesFilter(Model == null ? "" : Model.DateCriteria, false), new { @class = "form-control", @style = "height:28px" })
+                        </div>
+
+                        <div class="col-md-4">
+                            <div id="range" style="display:none">
+                                <div class="input-group input-daterange">
+                                    @Html.TextBoxFor(m => m.DateForm, new { @class = "form-control", @style = "height:28px" })
+                                    @Html.ValidationMessageFor(m => m.DateForm, "", new { @class = "text-danger" })
+
+
+                                    <div class="input-group-addon">to</div>
+
+                                    @Html.TextBoxFor(m => m.DateTo, new { @class = "form-control", @style = "height:28px" })
+                                    @Html.ValidationMessageFor(m => m.DateTo, "", new { @class = "text-danger" })
+
+                                    <div class="input-group-addon" id="searchrange">
+                                        <span style="cursor:pointer" class="fa fa-search"></span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-md-2 text-right">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Product Code</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Total Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in addoons)
+                    {
+                        var qty = lstCourseAddons.Where(x=> x.AdonID == record.AdOnID).Count();
+                        var price = lstCourseAddons.Where(x => x.AdonID == record.AdOnID).Sum(x=> x.AdonPrice);
+                        <tr>
+                            <td>@record.ProductCode</td>
+                            <td>@record.Name</td>
+                            <td>@qty</td>
+                            <td>@price.ToString("C")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

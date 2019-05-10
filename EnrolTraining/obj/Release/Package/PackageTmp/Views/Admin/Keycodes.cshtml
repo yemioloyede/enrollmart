@@ -1,0 +1,77 @@
+﻿@model IEnumerable<EnrolTraining.Models.Keycode>
+@{
+    Layout = null;
+}
+
+
+
+@{
+    if (Model != null && Model.Count() > 0)
+    {
+        <script type="text/javascript">
+            $(document).ready(function(e)
+            {
+                tblsetup('#tbl', true, true, true, -1);
+            })
+        </script>
+        <style>
+            .content-scroll-wrap{
+                padding:15px;
+            }
+        </style>
+
+
+        <div class="content-box">
+            <div class="content-box-hdr">
+                <div class="content-hdr-form">
+                    <span id="mainContent_filterfields">
+
+                    </span>
+                    <div class="right-buttons">
+                        <a href="#" style="display:none" class="btn btn-danger btn-xs">XLS Export</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-box-table">
+                <table id="tbl" class="enrdatatbl">
+                    <thead>
+                        <tr>
+                            <th>Date Added</th>
+                            <th>Date Assigned</th>
+                            <th>Registrant</th>
+                            <th>Keycode</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var record in Model)
+                            {
+                                string AssignedDate = record.DateAssigned == null ? "--" : Convert.ToDateTime(record.DateAssigned).ToString("M/d/yyyy");
+                                string registrant = string.IsNullOrWhiteSpace(record.Registrant) ? "--" : record.Registrant;
+                                <tr>
+                                    <td> @record.DateAdded.ToString("M/d/yyyy")</td>
+                                    <td> @AssignedDate</td>
+                                    <td> @registrant</td>
+                                    <td> @record.Key</td>
+                                    <td>
+                                        @{
+                                            if (record.DateAssigned == null)
+                                            {
+                                                <a href="/Admin/DeleteKeycode?id=@record.KeycodeID"> <span class="fa fa-trash"></span> </a>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+   }
+}
+

@@ -1,0 +1,201 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.RegistrationAdOn
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    string typ = Model != null ? Model.Type : "";
+    bool isTaxable = Model != null ? Model.IsTaxable : false;
+}
+
+<script>
+    $(document).ready(function (e) {
+
+        var checktype = "@typ";
+        var isshowtax = "@isTaxable";
+
+        if (checktype == "KeyCode")
+        {
+            ShowKeycode();
+        }
+
+        if (isshowtax == "True")
+        {
+            ShowTax();
+        }
+
+        function ShowKeycode()
+        {
+            $('#keycodecontainer').show();
+            $("[name=KeycodeID]").prop('disabled', false);
+        }
+
+        function ShowTax()
+        {
+            $('#taxcontainer').show();
+            $("[name=TaxID]").prop('disabled', false);
+        }
+
+        $("#IsTaxable").change(function () {
+            if (this.checked) {
+                ShowTax();
+            }
+            else
+            {
+                $('#taxcontainer').hide();
+                $("[name=TaxID]").prop('disabled', true);
+            }
+        });
+
+        $('input[type=radio]').change(function () {
+            var selected = this.value;
+            if (selected == "KeyCode") {
+                ShowKeycode();
+            }
+            else
+            {
+                $('#keycodecontainer').hide();
+                $("[name=KeycodeID]").prop('disabled', true);
+            }
+        });
+    })
+</script>
+
+
+<div class='page-title'>
+    <h1>Registration Add-Ons</h1>
+</div>
+
+
+    <div class="FormWrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    @using (Html.BeginForm("AddRegistrationAdOn", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.RenderFlashMessages()
+                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                        @Html.Hidden("AdOnID", Model == null ? 0 : Model.AdOnID)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ProductCode, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.ProductCode, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.ProductCode, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Name, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4 control-label">
+                                @Html.LabelFor(m => m.Description)
+                                    <span class="tipso" data-tipso="Information entered in this field is for internal reference only and is not displayed to the registrants.">
+                                        <span class="fa fa-info-circle" style="color:#8c98ab;font-size:16px"></span>
+                                        @*<img alt="" src="/Content/Images/icon-help.png" />*@
+                                    </span>
+                             </div>
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                                @Html.LabelFor(m => m.DisplayOrder, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(m => m.DisplayOrder, DropdownLists.DisplayOrder(Model == null ? "0" : Model.DisplayOrder.ToString(), false), new { @class = "form-control" })
+                                </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Price, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Type, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                <div style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.RadioButtonFor(m => m.Type, "Shippable", new { @style="margin-top:1px", @checked = "checked" })
+                                            Shippable Item
+                                        </label>
+                                    </div>
+                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.RadioButtonFor(m => m.Type, "NonShippable", new { @style = "margin-top:1px" })
+                                            Non-shippable Item
+                                        </label>
+                                    </div>
+                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.RadioButtonFor(m => m.Type, "KeyCode", new { @style = "margin-top:1px" })
+                                            Keycode
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsDefaultForAllRegistration, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.IsDefaultForAllRegistration, new { @style = "margin-top:1px" })
+                                        Default the selection to "yes" for all registrations
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.IsTaxable, new { @style = "margin-top:1px" })
+                                        Taxable
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                                <div class="form-group" id="keycodecontainer" style="display:none">
+                                    @Html.LabelFor(m => m.KeycodeID, new { @class = "col-md-4 control-label" })
+                                    <div class="col-md-8">
+                                        @Html.DropDownListFor(m => m.KeycodeID, DropdownLists.KeycodeBanks(Model == null ? "0" : Model.KeycodeID.ToString(), true, "--Select--"), new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group" id="taxcontainer" style="display:none">
+                                    @Html.LabelFor(m => m.TaxID, new { @class = "col-md-4 control-label" })
+                                    <div class="col-md-8">
+                                        @Html.DropDownListFor(m => m.TaxID, DropdownLists.Taxes(Model == null ? "0" : Model.TaxID.ToString(), true, "--Select--"), new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+
+
+
+                        <hr style="border-color:#e8e6e6" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10 text-right">
+                                <a href="/Admin/RegistrationAdOns" class="btn btn-default">Back</a>
+                                @{
+                                    if (Model != null && Model.AdOnID > 0)
+                                    {
+                                        <a href="/Admin/DeleteAdOn?id=@Model.AdOnID" class="btn btn-danger">Delete</a>
+                                    }
+                                }
+
+                                <input type="submit" value="Save" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                    }
+                </section>
+            </div>
+
+        </div>
+    </div>
+    <div class='clear'></div>

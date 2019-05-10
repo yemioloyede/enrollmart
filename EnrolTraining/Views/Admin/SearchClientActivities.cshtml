@@ -1,0 +1,90 @@
+﻿@model IEnumerable<EnrolTraining.Models.ClientActivityViewModel>
+
+@{
+    Layout = null;
+}
+
+
+@{
+            if (Model != null && Model.Count() > 0)
+            {
+            <div style="padding:20px; background-color:white; padding-bottom:10px">
+              <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                <thead>
+                    <tr>
+
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Class
+                        </th>
+
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Due
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+
+                        foreach (var record in Model)
+                        {
+                            string name = record.FirstName+ ", " + record.LastName;
+                            int statusid = record.Status == null ? 1 : Convert.ToInt32(record.Status);
+                            string status = EnrolTraining.DropdownLists.GetEnumDescription((EnrolTraining.Common.EnumModel.StudentStatus)statusid);
+                            <tr>
+                                <td>
+                                    <span>@name </span> <br />
+                                    <span class="small text-danger">@record.Email</span>
+                                </td>
+                                <td>
+                                    <span>@record.CourseName </span> <br />
+                                    <span>@record.ScheduleDate.ToString("ddd M/d/yyyy") @record.ScheduleTime</span>
+                                </td>
+                                <td>
+                                    @record.Price.ToString("C")
+                                </td>
+                                <td>
+                                    0
+                                </td>
+                                <td>
+                                    @status
+                                </td>
+
+                                <td>
+                                    <a href="/Admin/EditStudent?id=@record.StudentID"> <span class="fa fa-edit"></span> </a>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+
+
+                </tbody>
+            </table>
+
+        </div>
+                        }
+                        else
+                        {
+                            <div style="padding:20px; background-color:white; padding-bottom:10px">
+                                <div class="alert  alert-link">
+                                    <span class="glyphicon glyphicon-alert"></span>
+                                    <span>No Activity Found</span>
+
+                                </div>
+
+                            </div>
+                        }
+}

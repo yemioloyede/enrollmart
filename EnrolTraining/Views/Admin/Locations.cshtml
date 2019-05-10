@@ -1,0 +1,62 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.Location>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Locations</h1>
+</div>
+@Html.RenderFlashMessages()
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+
+            </span>
+            <div class="right-buttons">
+                <a href="/Admin/AddLocation" class="btn btn-danger btn-xs">New Location</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Abbrev</th>
+                    <th>Directions</th>
+                    <th>Default</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in Model)
+                    {
+                        var isDefault = record.IsDefaultSelectionForClasses == true ? "Yes" : "No";
+                        <tr>
+                            <td>@record.Name</td>
+                            <td>@record.Abbreviation</td>
+                            <td>@Html.Raw(Html.Encode(record.Directions).Replace("\n", "<br />")) </td>
+                            <td>@isDefault </td>
+                            <td>
+                                <a href="/Admin/EditLocation?id=@record.LocationID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

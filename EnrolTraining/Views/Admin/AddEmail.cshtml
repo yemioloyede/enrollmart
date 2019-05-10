@@ -1,0 +1,185 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.CampaignTemplate
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script src="~/Scripts/tinymce/tinymce.min.js"></script>
+<script src="~/Scripts/edtr.js" type="text/javascript"></script>
+<script>
+
+
+    function SendTestEmail() {
+        var eml = $('#testemail').val();
+        var sub = $('#EmailSubject').val();
+        var body = tinymce.get('EmailBody').getContent();
+
+        if (eml == "") {
+            alert('Please provide Email Address')
+            return;
+        }
+        else
+        {
+            var checkemail = isValidEmailAddress(eml);
+            if (checkemail == false)
+            {
+                alert('Invalid Email Address')
+                return;
+            }
+        }
+
+        if (sub == "") {
+            alert('Please provide Subject of Email')
+            return;
+        }
+
+        if (body == "")
+        {
+            alert('Email Body is empty. cannot send email')
+            return;
+        }
+            $.ajax({
+                type: "POST",
+                url: '/Admin/SendEmail',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    "email": eml,
+                    "subject": sub,
+                    "body": body,
+                    "campid": "@ViewBag.CampaignID"
+                }),
+            }).done(function (data) {
+                if (data == true) {
+                    alert('Email send successfully');
+                }
+                else {
+                    alert(data);
+                }
+            });
+
+    }
+
+    $(document).ready(function (e) {
+
+   })
+</script>
+
+<div class='page-title'>
+    <h1>Add / Edit Email</h1>
+</div>
+
+
+<div class="FormWrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <section>
+                @using (Html.BeginForm("AddEmail", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.RenderFlashMessages()
+                    @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+                    @Html.Hidden("EmailID", Model == null ? 0 : Model.EmailID)
+                    int campid = ViewBag.CampaignID == null ? 0 : ViewBag.CampaignID;
+                    <input type="hidden" name="ProfileID" value="@campid" />
+
+                    <div class="form-group">
+                        @Html.Label("Timing", new { @class = "col-md-4 control-label" })
+                         <div class="col-md-8">
+                             @*<div class="col-md-2" style="padding-left:0px; top:10px">
+                                 <span>Send Email </span>
+                             </div>
+                             <div class="col-md-3">
+                                 @Html.TextBoxFor(m => m.ScheduleDays, new { @class = "form-control NumberField", @style = "display:inline-block" })
+                                 @Html.ValidationMessageFor(m => m.ScheduleDays, "", new { @class = "text-danger" })
+                             </div>
+                             <div class="col-md-2" style="top:10px">
+                                 <span>day(s)</span>                                 
+                             </div>
+                             <div class="col-md-3">
+                                 @Html.DropDownListFor(m => m.ScheduleType, DropdownLists.EmailCampaignScheduleType(Model == null ? "0" : Model.ScheduleType.ToString(), false), new { @class = "form-control NumberField", @style = "display:inline-block" })
+                             </div>
+                             <div class="col-md-2"  style="top:10px">
+                                 <span>the class</span>
+                             </div>*@
+
+                             <span>Send Email </span>
+                             @Html.TextBoxFor(m => m.ScheduleDays, new { @class = "form-control", @style = "display:inline-block; width:90px" })
+                             @Html.ValidationMessageFor(m => m.ScheduleDays, "", new { @class = "text-danger" })
+                             <span>day(s)</span>
+                             @Html.DropDownListFor(m => m.ScheduleType, DropdownLists.EmailCampaignScheduleType(Model == null ? "0" : Model.ScheduleType.ToString(), false), new { @class = "form-control", @style = "display:inline-block; width:90px" })
+                             <span>the class</span>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EmailSubject, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.EmailSubject, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.EmailSubject, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EmailBody, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(m => m.EmailBody, 10, 0, new { @class = "form-control clientEditor" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Supported Token", new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @*<div class="row">
+                                <div class="col-md-12">
+                                    <span class="small clear"><strong>[FIRSTNAME]</strong>- The student's FirstName</span>
+                                </div>
+                            </div>*@
+                            <span class="small"><strong>[FIRSTNAME]</strong>- The student's FirstName</span><br />
+                            <span class="small"><strong>[CLASSNAME]</strong>- The Name of course</span><br />
+                            <span class="small"><strong>[CLASSINFO]</strong>- This token is replaced by a block of information including the class location, instructor, directions, and date/times</span><br />
+                            <span class="small"><strong>[DISCIPLINE]</strong>- The discipline name associated with the course</span><br />
+                            <span class="small"><strong>[CLASSID]</strong>- The ID number of the scheduled class</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Test", new { @class = "col-md-4 control-label" })
+                        @*<div class="col-md-2">
+                            <span>Send Test Email to</span>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="testemail" />
+                        </div>
+                        <div class="col-md-2">
+                            <a id="btnTest" href="#" class="btn btn-default" onclick="SendTestEmail()">Go</a>
+                        </div>*@
+
+                        <div class="col-md-8">
+
+                            <span>Send Test Email to </span>
+                            <input type="text" class="form-control" id="testemail" style="display:inline-block; width:280px"/>
+                            <a id="btnTest" href="#" class="btn btn-default" onclick="SendTestEmail()">Go</a>
+                        </div>
+                    </div>
+
+
+                        <hr style="border-color:#e8e6e6" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10 text-right">
+                                <a href="/Admin/EmailCampaigns" class="btn btn-default">Back</a>
+                                <input type="submit" value="Save" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                }
+            </section>
+        </div>
+
+    </div>
+</div>
+<div class='clear'></div>

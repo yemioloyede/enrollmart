@@ -1,0 +1,126 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.KeycodeSaleViewModel>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+
+        $('#ksFilter').change(function (e) {
+            var form = $('#filterForm');
+            form.submit();
+        })
+
+
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Keycode Sales</h1>
+</div>
+@Html.RenderFlashMessages()
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+                @using (Html.BeginForm("KeycodeSales", "Admin", null, FormMethod.Post, new { @id = "filterForm", @class = "form-horizontal", role = "form" }))
+                {
+                    <span id="mainContent_filterfields">
+                        @Html.DropDownList("ksFilter", DropdownLists.KeycodeSaleFilters(Model == null ? "0" : (string)ViewBag.SelectedFilter, false), new { @class = "form-control NumberField" })
+                    </span>
+                }
+
+            </span>
+            <div class="right-buttons">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Purchased
+                    </th>
+                    <th>
+                        Phone
+                    </th>
+                    <th>
+                        Class
+                    </th>
+                    <th>
+                        Keycode
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+
+                    foreach (var record in Model)
+                    {
+                        string name = record.LastName + ", " + record.FirstName;
+                        <tr>
+                            <td>
+                                <span>@name </span> <br />
+                                <span class="small text-danger">@record.Email</span>
+                            </td>
+                            <td>
+                                @Convert.ToDateTime(record.Purchased).ToString("MM/dd/yyyy")
+                            </td>
+                            <td>
+                                @record.Phone
+                            </td>
+                            <td>
+                                <span>@record.Course </span> <br />
+                                @{
+                                    if (record.IsUnscheduled)
+                                    {
+                                        <span class="small">Unscheduled</span>
+                                    }
+                                    else
+                                    {
+                                        <a href="/Admin/EditClass?id=@record.ClassID"> <span class="small text-danger">@record.ClassDate.ToString("MMM MM/dd/yyyy") @record.ClassTime</span> </a>
+                                    }
+                                 }
+                            </td>
+                            <td>
+                                @{ 
+                                    if (string.IsNullOrWhiteSpace(record.Keycode))
+                                    {
+                                        <span>Unassigned</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@record.Keycode</span> 
+                                    }
+                                }
+                            </td>
+                            <td>
+                                <a href="/Admin/EditStudent?id=@record.StudentID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+
+                }
+
+
+            </tbody>
+
+
+
+
+        </table>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.Tax
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class='page-title'>
+    <h1>Add/ Edit Tax</h1>
+</div>
+
+<div class="FormWrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <section>
+                @using (Html.BeginForm("AddTax", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.RenderFlashMessages()
+                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                    @Html.Hidden("TaxID", Model == null ? 0 : Model.TaxID)
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Description, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Percentage, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Percentage, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Percentage, "", new { @class = "text-danger" })
+
+
+                            </div>
+                        </div>
+
+                                        <hr style="border-color:#e8e6e6" />
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10 text-right">
+                                                <a href="/Admin/Taxes" class="btn btn-default">Back</a>
+                                                <input type="submit" value="Save" class="btn btn-success" />
+                                            </div>
+                                        </div>
+
+                         }
+            </section>
+        </div>
+
+    </div>
+</div>
+<div class='clear'></div>

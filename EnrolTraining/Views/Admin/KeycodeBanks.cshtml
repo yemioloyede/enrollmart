@@ -1,0 +1,67 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.KeycodeBank>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Keycode Banks</h1>
+</div>
+
+@Html.RenderFlashMessages()
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+
+            </span>
+            <div class="right-buttons">
+                <a href="/Admin/AddKeycodeBank" class="btn btn-danger btn-xs">New Keycode Bank</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Total</th>
+                    <th>Unused</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    EnrolTraining.Context dbc = new EnrolTraining.Context();
+
+                    foreach (var record in Model)
+                    {
+                        int keybankid = record.KeycodeBankID;
+                        List<EnrolTraining.Models.Keycode> lstCodes = dbc.Keycode.Where(x => x.KeyBankID == keybankid).ToList();
+                        int totalKeys = lstCodes.Count;
+                        int unused = lstCodes.Where(x => x.DateAssigned == null).Count();
+
+                        <tr>
+                            <td> @record.Name</td>
+                            <td> @totalKeys</td>
+                            <td> @unused</td>
+                            <td>
+                                <a href="/Admin/EditKeycodeBank?id=@record.KeycodeBankID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.User>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+        //$('#tbl').DataTable();
+    })
+</script>
+
+<div class='page-title'>
+    <h1>User Manager</h1>
+</div>
+@Html.RenderFlashMessages()
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+
+            </span>
+            <div class="right-buttons">
+                <a href="/Admin/AddUser" class="btn btn-danger btn-xs">Add User</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">  
+        <table id="tbl" class="enrdatatbl">  
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Active</th>
+                    <th>Username</th>
+                    <th>Training Site</th>
+                    <th>Admin</th>
+                    <th>Last Activity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in Model)
+                    {
+                        string name = record.LastName + ((string.IsNullOrWhiteSpace(record.FirstName) || string.IsNullOrWhiteSpace(record.LastName)) ? "" : ",") + record.FirstName;
+                        string email = ((string.IsNullOrWhiteSpace(record.FirstName) || string.IsNullOrWhiteSpace(record.LastName)) ? record.EmailAddress : Environment.NewLine + record.EmailAddress);
+                        string active = record.IsActive == true ? "Yes" : "No";
+                        string admin = record.IsTrainingSiteAdmin == true ? "TS" : "";
+                        <tr>
+                            <td>
+                            @name
+                            <span  class="text-danger small">@Html.Raw(Html.Encode(email).Replace("\n", "<br />"))</span>
+                            </td>
+                            <td>@active</td>
+                            <td>@record.UserName</td>
+                            <td>@EnrolTraining.Common.SessionWrapper.Current.CompanyName </td>
+                            <td>@admin</td>
+                            <td>@record.LastActivity.ToString("MM/dd/yyyy")</td>
+                            <td>
+                                <a href="/Admin/EditUser?id=@record.UserID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

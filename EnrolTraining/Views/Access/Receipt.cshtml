@@ -1,0 +1,266 @@
+﻿
+@{
+    Layout = null;
+    int id = ViewBag.id;
+    string code = ViewBag.code;
+    EnrolTraining.Context db = new EnrolTraining.Context();
+    var query = (from schedule in db.ScheduleClass
+                 join course in db.CourseType on schedule.CourseID equals course.CourseTypeID
+                 join student in db.Student on schedule.ClassID equals student.ClassID
+                 join location in db.Location on student.LocationID equals location.LocationID
+                 join company in db.Company on location.CompanyID equals company.CompanyID
+                 where student.StudentID == id && student.ReceiptCode == code
+                 select new {CompanyName = company.CompanyName, CompanyAddress1 = company.Address1, CompanyAddress2 = company.Address2, CompanyCity = company.City, CompanyState = company.State, CompanyZip = company.Zip, CompanyEmail = company.Email, CompanyContactNo = company.Phone, CustomerFirstName = student.FirstName, CustomerLastName = student.LastName, CustomerAddress1 = student.MailingAddress1, CustomerAddress2 = student.MailingAddress2, CustomerCity = student.MailingCity, CustomerState = student.MailingState, CustomerZip = student.MailingZip, customerEmail = student.Email, customerContactNo = student.PrimaryPhone, OrderDate = student.RegisterionDate, CourseName = course.CourseName, CourseDate = schedule.ScheduleDate, CourseStartTime = schedule.StartTime, CourseEndTime = schedule.EndTime, CourseAddOns = student.SelectedOptions, CoursePrice = student.ClassPrice, ShippingPrice = student.ShippingPrice,  Keycode = student.Keycode, Location = location.Name, Directions = location.Directions }).FirstOrDefault();
+
+    List<EnrolTraining.Models.StudentPayment> payments = db.StudentPayment.Where(x => x.StudentID == id).ToList();
+    List<EnrolTraining.Models.CourseAdon> addons = db.CourseAdon.Where(x => x.StudentID == id).ToList();
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>
+        Registration Receipt
+    </title>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            color: #444;
+            font-size: 13px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        hr {
+            border: 0;
+            color: #9E9E9E;
+            background-color: #9E9E9E;
+            height: 1px;
+            width: 100%;
+            text-align: left;
+        }
+
+        #wrap {
+            width: 600px;
+            margin: 20px auto;
+            border: 1px solid #000;
+        }
+
+        .section-head {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2E5C63;
+            padding-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2E5C63;
+            padding: 10px;
+            border-bottom: 1px solid #000;
+        }
+
+        .main {
+            padding: 10px;
+        }
+
+        .rt {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        @{
+            if (query != null)
+            {
+                <div class="header">
+                    @query.CompanyName
+                    Registration Receipt
+                </div>
+                <div class="main">
+                    <p>
+
+                        Thank you for your registration. Please print this receipt for your reference.
+                    </p>
+                    <hr />
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 50%; vertical-align: top;">
+                                <div class="section-head">
+                                    Order Information
+                                </div>
+                                <table>
+                                    <tr>
+                                        <td style="padding-right: 5px;">
+                                            <b>Order Date:</b>
+                                        </td>
+                                        <td>
+                                            @query.OrderDate.ToString("M/d/yyyy")
+                                        </td>
+                                    </tr>
+                                    @{
+                                        if (!string.IsNullOrWhiteSpace(query.Keycode))
+                                        {
+                                            <tr>
+                                                <td style="padding-right: 5px;">
+                                                    <b>Keycode:</b>
+                                                </td>
+                                                <td>
+                                                    @query.Keycode
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    }
+
+                                </table>
+                            </td>
+                            <td style="width: 50%; vertical-align: top;">
+                                <div class="section-head">
+                                    Training Site Contact
+                                </div>
+                                <table>
+                                    <tr>
+                                        @{ 
+                                            string address2 = string.IsNullOrWhiteSpace(query.CompanyAddress2) ? "" : query.CompanyAddress2;
+                                        }
+                                        <td style="padding-right: 5px;">
+                                            @query.CompanyName<br />
+                                            @query.CompanyAddress1<br />
+                                            @address2 <br />
+                                            @query.CompanyCity, @query.CompanyState @query.CompanyZip<br />
+                                            @query.CompanyEmail<br />
+                                            @query.CompanyContactNo
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <div class="section-head">
+                        Customer
+                    </div>
+                    @query.CustomerFirstName @query.CustomerLastName<br>
+                    @query.customerContactNo<br>
+                    @query.customerEmail<br>
+                    <br />
+                    <table border="1" cellpadding="5" style="width: 100%;" bordercolor="#aaaaaa">
+                        <tr>
+                            <td style="text-align: center;">
+                                <b>Item</b>
+                            </td>
+                            <td style="width: 100px; text-align: right;">
+                                <b>Cost</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @query.CourseName
+                                @query.CourseDate.ToString("ddd M/d/yyyy") from @query.CourseStartTime to @query.CourseEndTime
+                            </td>
+                            <td style="text-align: right;">
+                                @query.CoursePrice.ToString("C")
+                            </td>
+                        </tr>
+                        @{
+                            foreach (var adon in addons)
+                            {
+                                <tr>
+                                    <td>
+                                        @adon.AdOnName
+                                    </td>
+                                    <td class="rt">
+                                        @adon.Price.ToString("C")
+                                    </td>
+                                </tr>
+                            }
+
+                            if (query.ShippingPrice > 0)
+                            {
+                                <tr>
+                                    <td>
+                                        Shipping
+                                    </td>
+                                    <td class="rt">
+                                        @query.ShippingPrice.ToString("C")
+                                    </td>
+                                </tr>
+                            }
+
+                            double addonPrice = addons.Sum(x => x.Price);
+                            double totalPrice = query.CoursePrice + addonPrice + query.ShippingPrice;
+                        }
+
+
+                        <tr>
+                            <td class="rt">
+                                <b>Total</b>
+                            </td>
+                            <td class="rt">
+                                @totalPrice.ToString("C")
+                            </td>
+                        </tr>
+                        @{
+                            foreach (var payment in payments)
+                            {
+                                <tr>
+                                    @{
+                                        if (payment.type == "Discount")
+                                        {
+                                            <td class='rt'>@payment.type - @payment.Detail</td>
+                                        }
+                                        else
+                                        {
+                                            <td class='rt'>@payment.type @payment.PaymentDate.ToString("M/d/yyyy")</td>
+                                        }
+                                    }
+                                    
+                                    <td class='rt'>@payment.Amount</td>
+                                </tr>
+
+                            }
+                            double totalPayments = payments.Sum(x => x.Amount);
+                            double balanceDue = totalPrice - totalPayments;
+                        }
+
+
+                        <tr>
+                            <td class='rt'><b>Balance Due</b></td>
+                            <td class='rt'>@balanceDue.ToString("C")</td>
+                        </tr>
+                    </table>
+
+                    <div id="locationPnl">
+                        <div class="section-head">
+                            Class Location
+                        </div>
+                        @query.Location<br />
+                        <br /><b>Directions:</b><br />
+                        @Html.Raw(Html.Encode(query.Directions).Replace("\n", "<br />"))
+
+                    </div>
+
+
+                </div>
+
+                            }
+                            else
+                            {
+                                <div class="header">
+                                    <span>Cannot find Receipt</span>
+                                </div>
+                            }
+        }
+        
+
+        </div>
+</body>
+</html>

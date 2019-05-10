@@ -1,0 +1,248 @@
+@font-face {
+    font-family: app-icons;
+    src: url(/fonts/custom/SuperShop.eot);
+    src: url(/fonts/custom/SuperShop.eot?#iefix) format("embedded-opentype"),url(/fonts/custom/SuperShop.woff) format("woff"),url(/fonts/custom/SuperShop.ttf) format("truetype"),url(/fonts/custom/SuperShop.svg#supershop) format("svg");
+    font-weight: 400;
+    font-style: normal
+}
+
+
+.app-icons,.page-heading .controls .user-controls .non-owner-icon,.page-heading .controls .user-controls.open .user-email__caret,.page-heading .controls .user-controls .owner-icon,.page-heading .controls .user-controls .user-email__caret,nav .navigation-header .navigation-toggle span,nav .navigation-menu>li:before {
+    display: inline-block;
+    font: normal normal normal 14px/1 app-icons;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /*-webkit-transform: translate(0);
+    -ms-transform: translate(0);
+    transform: translate(0);*/
+    -webkit-transition: all 300ms 0s ease-in-out;
+    transition: all 300ms 0s ease-in-out;
+
+}
+
+.app-icons-breadcrumb-chevron:before,.app-icons-chevron-down:before,.app-icons-chevron-up:before,.page-heading .controls .user-controls.open .user-email__caret:before,.page-heading .controls .user-controls .user-email__caret:before {
+    content: '\EA01'
+}
+
+.app-icons-burger-button:before,nav .navigation-header .navigation-toggle span:before {
+    content: '\EA02'
+}
+
+.app-icons-circled-chevron:before,.app-icons-link-chevron:after {
+    content: '\EA03'
+}
+
+.app-icons-item-qoh-history:before {
+    content: '\EA04'
+}
+
+.app-icons-item-adjust-qty:before {
+    content: '\EA05'
+}
+
+.app-icons-item-customer-history:before {
+    content: '\EA06'
+}
+
+.app-icons-loading-spinner:before {
+    content: '\EA07'
+}
+
+.app-icons-nav-analytics:before,nav .navigation-menu>li.analytics:before {
+    content: '\EA08'
+}
+
+.app-icons-nav-birds-eye:before,nav .navigation-menu>li.dashboard:before {
+    content: '\EA09'
+}
+
+
+.app-icons-nav-inventory:before,nav .navigation-menu>li.items:before {
+    content: '\EA0A'
+}
+
+.app-icons-nav-marketing:before,nav .navigation-menu>li.marketing:before {
+    content: '\EA0B'
+}
+
+.app-icons-nav-settings:before,nav .navigation-menu>li.settings:before {
+    content: '\EA0C'
+}
+
+.app-icons-nav-staff:before,nav .navigation-menu>li.staff:before {
+    content: '\EA0D'
+}
+
+.app-icons-tile-total-sales:before {
+    content: '\EA0E'
+}
+
+.app-icons-tile-transaction-count:before {
+    content: '\EA0F'
+}
+
+.app-icons-user-non-owner:before,.page-heading .controls .user-controls .non-owner-icon:before {
+    content: '\EA10'
+}
+
+.app-icons-user-owner:before,.page-heading .controls .user-controls .owner-icon:before {
+    content: '\EA22'
+}
+
+.app-icons-icon-tile-customers-new:before {
+    content: '\EA12'
+}
+
+.app-icons-icon-tile-customers-returning:before {
+    content: '\EA13'
+}
+
+.app-icons-error-status:before {
+    content: '\EA14'
+}
+
+.app-icons-icon-filter-clear:before {
+    content: '\EA15'
+}
+
+.app-icons-icon-filter-select-all:before {
+    content: '\EA16'
+}
+
+.app-icons-icon-input-checkbox-check:before {
+    content: '\EA17'
+}
+
+.app-icons-icon-tile-empty-chart:before {
+    content: '\EA18'
+}
+
+.app-icons-icon-nav-admin-accounts:before {
+    content: '\EA19'
+}
+
+.app-icons-icon-comparison-arrow-down:before {
+    content: '\EA1A'
+}
+
+.app-icons-icon-comparison-arrow-up:before {
+    content: '\EA1B'
+}
+
+.app-icons-icon-onboarding-cc-365-days:before {
+    content: '\EA1C'
+}
+
+.app-icons-icon-onboarding-cc-apple-pay:before {
+    content: '\EA1D'
+}
+
+.app-icons-icon-onboarding-cc-integrated:before {
+    content: '\EA1E'
+}
+
+.app-icons-icon-onboarding-cc-no-fees:before {
+    content: '\EA1F'
+}
+
+.app-icons-icon-nav-admin-add-account:before {
+    content: '\EA20'
+}
+
+.app-icons-icon-nav-admin-billing:before {
+    content: '\EA21'
+}
+
+.app-icons-icon-nav-admin-employee:before {
+    content: '\EA22'
+}
+
+.app-icons-icon-table-retry:before {
+    content: '\EA23'
+}
+
+.app-icons-icon-table-export:before {
+    content: '\EA24'
+}
+
+.app-icons-icon-onboarding-nav-hardware:before {
+    content: '\EA25'
+}
+
+.app-icons-icon-onboarding-nav-register:before {
+    content: '\EA26'
+}
+
+.app-icons-icon-onboarding-nav-payment:before {
+    content: '\EA27'
+}
+
+.app-icons-icon-onboarding-nav-setup:before {
+    content: '\EA28'
+}
+
+.app-icons-icon-onboarding-nav-subscription:before {
+    content: '\EA29'
+}
+
+.app-icons-icon-timer-mobile:before {
+    content: '\EA2A'
+}
+
+.app-icons-icon-header-date-picker-comparison:before {
+    content: '\EA2B'
+}
+
+.app-icons-icon-ipad-missing:before {
+    content: '\EA2C'
+}
+
+.app-icons-nav-lending:before,nav .navigation-menu>li.lending:before {
+    content: '\EA2D'
+}
+
+.app-icons-store-icon:before {
+    content: '\EA2E'
+}
+
+.app-icons-icon-nav-register:before,nav .navigation-menu>li.ipad-register-swivel:before {
+    content: '\EA2F'
+}
+
+.app-icons-icon-checkmark:before {
+    content: '\EA30'
+}
+
+.app-icons-icon-onboarding-reporting-banner:before {
+    content: '\EA31'
+}
+
+.app-icons-icon-onboarding-hardware-no-circle:before {
+    content: '\EA32'
+}
+
+.app-icons-icon-onboarding-payment-no-circle:before {
+    content: '\EA33'
+}
+
+.app-icons-icon-onboarding-subscription-no-circle:before {
+    content: '\EA34'
+}
+
+.app-icons-icon-header-print:before {
+    content: '\EA35'
+}
+
+.app-icons-chevron-up,.page-heading .controls .user-controls.open .user-email__caret {
+    -webkit-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    transform: rotate(-90deg)
+}
+
+.app-icons-chevron-down,.page-heading .controls .user-controls .user-email__caret {
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg)
+}

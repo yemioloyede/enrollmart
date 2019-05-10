@@ -1,0 +1,81 @@
+﻿@using Vereyon.Web
+@model IEnumerable<string>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/css/fileinput.css" />
+<script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
+<script>
+    $(document).on('ready', function () {
+    });
+</script>
+
+<div class='page-title'>
+    <h1>Certificates</h1>
+</div>
+@Html.RenderFlashMessages()
+
+        <div class="content-box">
+            <div class="content-box-hdr" style="border-bottom:0px">
+                <div class="content-hdr-form">
+                    <span id="mainContent_filterfields">
+                    </span>
+                    <div class="right-buttons" style="margin-bottom:8px">
+                        <button type="button" class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target="#UploadCertificate">Upload Certificate </button>
+                    </div>
+                </div>
+                @using (Html.BeginForm("UploadCertificate", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                { 
+
+                    <div id="UploadCertificate" class="collapse" style="padding:30px; background-color:white">
+                        <label class="control-label">Select File</label>
+                        <input id="certificate" type="file" name="certificate" class="file file-loading" data-elErrorContainer="#fileerror" data-show-preview="false" data-allowed-file-extensions='["docx"]' />
+                        <div id="fileerror"></div>
+                    </div>
+                }
+
+                @{
+                    if (Model != null && Model.Count() > 0)
+                    {
+                        <div style="padding:20px; background-color:white; padding-bottom:10px">
+                            <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-10">
+                                            Name
+                                        </th>
+                                        <th class="col-md-2">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @{
+
+                                        foreach (var record in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @record
+                                                </td>
+                                                <td>
+                                                    <a href="/Admin/DownloadCertificate?name=@record"> <span class="fa fa-download"></span> </a>
+                                                    <a href="/Admin/DeleteCertificate?name=@record"> <span class="fa fa-trash"></span> </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                                            }
+                }
+
+            </div>
+
+
+        </div>

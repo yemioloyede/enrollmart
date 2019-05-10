@@ -1,0 +1,92 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.Student>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Unscheduled Students</h1>
+</div>
+@Html.RenderFlashMessages()
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+
+            </span>
+            <div class="right-buttons">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Course
+                    </th>
+                    <th>
+                        Reg Date
+                    </th>
+                    <th>
+                        Phone
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+
+                    foreach (var record in Model)
+                    {
+                        string name = record.LastName + ", " + record.FirstName;
+                        int statusid = record.StatusID == null ? 1 : Convert.ToInt32(record.StatusID);
+                        string status = EnrolTraining.DropdownLists.GetEnumDescription((EnrolTraining.Common.EnumModel.StudentStatus)statusid);
+                        <tr>
+                            <td>
+                                <span>@name </span> <br />
+                                <span class="small text-danger">@record.Email</span>
+                            </td>
+                            <td>
+                                <span>@record.CourseName </span> <br />
+                            </td>
+                            <td>
+                                @record.RegisterionDate.ToString("MM/dd/yyyy")
+                            </td>
+                            <td>
+                                @record.PrimaryPhone
+                            </td>
+
+                            <td>
+                                <a href="/Admin/EditStudent?id=@record.StudentID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+
+                }
+
+
+            </tbody>
+
+
+
+
+        </table>
+    </div>
+</div>

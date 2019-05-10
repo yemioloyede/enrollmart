@@ -1,0 +1,286 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.User
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    function CheckSelectedRole(event) {
+        var elm = $('#roles').text();
+        if (elm == "")
+        {
+            return true;
+        }
+        var totalSelected = $('#roles').find('input[type=checkbox]:checked').length;
+        if (totalSelected > 0) {
+            return true;
+        }
+        else
+        {
+            event.preventDefault();
+            alert('Please select at least one Role');
+            return false;
+        }
+    }
+</script>
+
+
+<script>
+    $(document).ready(function(e){
+   })
+</script>
+
+<div class='page-title'>
+    <h1>Add / Edit User</h1>
+</div>
+
+<div class="FormWrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <section>
+                @using (Html.BeginForm("AddUser", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form", onsubmit = "return CheckSelectedRole(event);" }))
+                {
+                    string view = ViewBag.view;
+                    @Html.RenderFlashMessages()
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    @Html.Hidden("UserID", Model == null ? 0 : Model.UserID)
+                    @Html.Hidden("view", view)
+                    {
+                        if (Model != null && Model.UserID > 0)
+                        {
+
+                        }
+                        else
+                        {
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.UserName, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Address1, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Address1, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Address2, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Address2, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.City, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.State, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.State, DropdownLists.SelectUSAStates(Model == null ? "0" : Model.State == null ? "0": Model.State.ToString(), true, "-Select-"), new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Zip, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Zip, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PhoneNo, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.NameOnCardPrint, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.NameOnCardPrint, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AHAInstructorID, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.AHAInstructorID, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ASHIInstructorID, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.ASHIInstructorID, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.EmailAddress, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                    {
+                        if (Model != null && Model.UserID > 0)
+                        {
+
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Password, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-8">
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        }
+                    }
+
+
+
+
+                        <div class="form-group">
+                            @Html.Label("Options", new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                <div style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                    @{
+                                        if (view == "account")
+                                        {
+                                            <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.isSendEmailWhenAssignedClass, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                    Send me an email when I'm assigned to a class 
+                                                </label>
+                                            </div>
+                                            <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.isSendReminderPriorClass, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                    Send me reminder emails prior to my class
+                                                </label>
+                                            </div>
+                                            <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.isDisAbleMobileFriendly, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                    Disable mobile-friendly formatting  in the admin pages
+                                                </label>
+                                            </div>
+                                            <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.isDfaultUpcomingClassToShowAll, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                    Default upcoming class list page size to "Show All"
+                                                </label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.IsActive, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                    Active User
+                                                </label>
+                                            </div>
+
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+
+                                        {
+                                            if (view == "account")
+                                            {
+                                                <div class="form-group">
+                                                    @Html.Label("ICal Feed URL", new { @class = "col-md-4 control-label" })
+                                                    <div class="col-md-8">
+                                                        <label class="text-danger" style="padding-top:7px"> <a class="text-danger" href="/Admin/iCal"><strong>https://enrollmart.com/iCal</strong></a> </label><br />
+                                                    </div>
+                                                </div>
+
+                                            }
+                                        }
+
+
+                                        {
+                                            if (view != "account")
+                                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.IsTrainingSiteAdmin, new { @class = "col-md-4 control-label" })
+                                    <div class="col-md-8">
+                                        <div id="roles" style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                            @{
+                                                if (view != "instructor" || Model != null)
+                                                {
+                                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                        <label>
+                                                            @Html.CheckBoxFor(m => m.IsTrainingSiteAdmin, new { @style = "margin-top:1px;" })
+                                                            training-site-admin
+                                                        </label>
+                                                    </div>
+                                                }
+                                            }
+
+                                            <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.IsInstructor, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                    Instructor
+                                                </label>
+                                            </div>
+                                            <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.IsInstructorAssistant, new { @style = "margin-top:1px;", @checked = "checked" })
+                                                    Instructor-assistant
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                             }
+                        }
+
+                        <hr style="border-color:#e8e6e6" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10 text-right">
+                                <a href="/Admin/Users" class="btn btn-default">Cancel</a>
+                                <input type="submit" value="Save" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                       }
+            </section>
+        </div>
+
+    </div>
+</div>
+<div class='clear'></div>

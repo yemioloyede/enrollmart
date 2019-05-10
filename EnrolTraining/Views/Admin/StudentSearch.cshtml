@@ -1,0 +1,68 @@
+﻿@model EnrolTraining.Models.StudentSearchViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        searchFilters();
+        $('#Filter').change(function (e) {
+            searchFilters();
+        })
+
+        function searchFilters()
+        {
+            var filter = $('#Filter').val();
+            if (filter == "Name") {
+                $('#lName').show();
+                $('#Search').attr('placeholder', 'First Name')
+
+            }
+            else {
+                $('#lName').hide();
+                $('#Search').attr('placeholder', 'Search')
+            }
+
+        }
+
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Student Search</h1>
+</div>
+
+<form style="padding:15px; background-color:rgb(250, 250, 250); border:1px solid #ededed;border-radius:5px"  class="form-horizontal" method="post" action="/Admin/StudentSearch">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-1">
+                <label class="control-label">Search for</label>
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.Filter, DropdownLists.StudentSearchFilters(Model == null ? "0" : Model.Filter.ToString(), false), new { @class = "form-control" })
+            </div>
+            <div class="col-md-1">
+                <label class="control-label">matching</label>
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.Search, new { @class = "form-control" })
+            </div>
+            <div class="col-md-2" id="lName">
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @placeholder="Last Name" })
+            </div>
+
+            <div class="col-md-2">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+
+        </div>
+    </div>
+</form>
+
+@{
+    if (Model != null)
+    {
+        Html.RenderAction("ApplyStudentSearch", "Admin", new { Filter = Model.Filter, Search = Model.Search});
+    }
+}

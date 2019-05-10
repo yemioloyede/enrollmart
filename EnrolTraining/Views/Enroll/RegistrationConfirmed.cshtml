@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/_EnrollLayout.cshtml";
+}
+
+<link rel="stylesheet" media="screen" href="~/css/bootstrap-multiselect.css" />
+<script src="~/Scripts/bootstrap-multiselect.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $('#StartRegistration').click(function (e) {
+            var id = $('#Classes').val();
+            if (id == "")
+            {
+                alert('Please select a class to start registration');
+            }
+            else
+            {
+                var url = "/ClassDetail?id=" + id + "&iid=@ViewBag.id" ;
+                window.location.href = url;
+            }
+        })
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-9">
+            <div class="row" style="margin-bottom:30px">
+                <div align="center" class="col-md-12" style="margin-top:20px">
+                    <img src="~/Images/successful.gif" />
+                    <h2>Thanks You!</h2>
+                    <p style="font-size:20px; margin-bottom:20px">You have been successfully been registered</p>
+                    <a href="#" class="btn btn-success">Visit Trainer Website</a>
+                    <a href="/Calendar" class="btn btn-success">Show Calendar</a>
+                    <hr />
+
+                    @*<div style="width:100px; height:100px; border:1px solid #76b43e; border-radius:50%; background-color:#76b43e">
+                        <span class="glyphicon glyphicon-ok" style="color:white; font-size:50px; top:20px; background-color:transparent"></span>
+                    </div>*@
+
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4 style="color:#868080">
+                    If you want to register for another class, choose from below dropdown!
+                </h4>
+                <div>
+                    @Html.DropDownList("Classes", EnrolTraining.DropdownLists.ClassesDetails( (string) ViewBag.subdomain, true, "--Select--"), new {@class="form-control", @style="max-width:100%; margin-bottom:10px" })
+                </div>
+                <div>
+                    <a id="StartRegistration" href="#" class="btn btn-primary">Start Registration</a>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    @{
+        Html.RenderAction("RegistrationRightPanel", "Enroll");
+    }
+</div>
+
+

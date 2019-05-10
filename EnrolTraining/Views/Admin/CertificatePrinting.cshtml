@@ -1,0 +1,173 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.CertificatePrintViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+    function CheckSelectedStudent(event) {
+        var totalSelected = jQuery('input[type=checkbox]:checked').length;
+        if (totalSelected > 0) {
+            return true;
+        }
+        else
+        {
+            event.preventDefault();
+            alert('Please select at least one student');
+            return false;
+        }
+    }
+</script>
+
+
+<div class='page-title'>
+    <h1>@Model.CourseName</h1>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3 style="float:left; margin-left:5px; margin-top:0px; font-size:15px; color:#485a6f">@Model.ScheduleDate.ToString("ddd M/d/yyyy") from @Model.StartTime to @Model.EndTime</h3>
+    </div>
+</div>
+<div class="FormWrapper">
+
+    <form method="post" action="/Admin/StudentCerificate" class="form-horizontal" onsubmit="return CheckSelectedStudent(event);">
+        @Html.Hidden("CourseName", Model.CourseName)
+        @Html.Hidden("ClassID", Model.ClassID)
+        <div class="content-box">
+            <div class="content-box-hdr" style="border-bottom:0px; background:none">
+                <div class="content-hdr-form" style="padding-top:8px; font-size:14px">
+                    <div class="right-buttons" style="margin-bottom:8px;padding-top:0px">
+                    </div>
+                </div>
+
+                @{
+                    if (Model != null)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div style="padding:20px; background-color:white; padding-bottom:10px">
+                                    <h4  style="font-size:18px; color:darkviolet">Select Students</h4>
+                                    <hr />
+
+                                    <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Print
+                                                </th>
+
+                                                <th>
+                                                    First Name
+                                                </th>
+                                                <th>
+                                                    Last Name
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @{
+
+                                                for (int i = 0; i < Model.StudentID.Length; i++)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.CheckBox("SelectedStudent[" + i + "]")
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBox("FirstName[" + i + "]", Model.FirstName[i], new { @class="form-control" } )
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBox("LastName[" + i + "]", Model.LastName[i], new { @class = "form-control" })
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+                                            }
+
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-12" style="padding:20px">
+                                    <h4 style="font-size:18px; color:darkviolet">Print Otions</h4>
+                                    <hr />
+                                    <div class="form-group">
+                                        @Html.Label("Template", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.DropDownListFor(m => m.Template, DropdownLists.Templates(false), new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Template, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.Label("Course", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.CourseName, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("Instructor", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.Instructor, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("Instructor ID", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.InstructorID, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("Issue Date", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.IssueDate, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("Expires", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.Expires, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("Class Hours", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.ClassHours, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("CEU Credits", new { @class = "col-md-3 control-label" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(m => m.CEUCredits, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <hr style="border-color:#e8e6e6" />
+                                    <div class="form-group">
+                                        <div class="col-md-offset-3 col-md-9 text-right">
+                                            <a href="/Admin/EditClass?id=@Model.ClassID" class="btn btn-default">Back</a>
+                                            <input type="submit" value="Generate Certificates" class="btn btn-success" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                                                }
+                }
+
+            </div>
+
+
+        </div>
+    </form>
+
+</div>
+
+
+<div class='clear'></div>

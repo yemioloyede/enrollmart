@@ -1,0 +1,64 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.CourseType>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Course Types</h1>
+</div>
+@Html.RenderFlashMessages()
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+            <span id="mainContent_filterfields">
+
+            </span>
+            <div class="right-buttons">
+                <a href="/Admin/AddCourseType" class="btn btn-danger btn-xs">New Course Type</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Add-Ons</th>
+                    <th>Price</th>
+                    <th>Ship</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in Model)
+                    {
+                        Context db = new Context();
+                        var addonns = string.Join( ",", db.RegistrationAdOn.Where(e => record.AddOns.Contains(e.AdOnID.ToString())).ToList().Select(e=> e.Name).ToList());
+                        
+
+                        <tr>
+                            <td>@record.CourseName</td>
+                            <td>@addonns</td>
+                            <td>$@record.Price.ToString("#,###.00") </td>
+                            <td>$@record.ShippingPrice.ToString("#,###.00") </td>
+                            <td>
+                                <a href="/Admin/EditCourseType?id=@record.CourseTypeID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\bin\EnrolTraining.Service.dll.config
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\bin\EnrolTraining.Service.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\bin\EnrolTraining.Service.pdb
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\bin\EntityFramework.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\bin\EntityFramework.SqlServer.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\bin\EntityFramework.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\bin\EntityFramework.SqlServer.xml
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\obj\Release\EnrolTraining.Service.csprojResolveAssemblyReference.cache
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\obj\Release\EnrolTraining.Service.dll
+D:\Learn ASP.NET\Projects\MVC Projects\EnrolTraining\EnrolTraining.Service\obj\Release\EnrolTraining.Service.pdb

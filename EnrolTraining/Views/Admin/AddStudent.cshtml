@@ -1,0 +1,628 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.Student
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    EnrolTraining.Context dbc = new EnrolTraining.Context();
+    int CourseID = dbc.ScheduleClass.Where(x => x.ClassID == Model.ClassID).Select(x => x.CourseID).FirstOrDefault();
+
+}
+
+<link rel="stylesheet" media="screen" href="~/css/bootstrap-multiselect.css" />
+<script src="~/Scripts/bootstrap-multiselect.js"></script>
+
+@*<style type="text/css">
+    .multiselect-container {
+        width: 100% !important;
+    }
+
+    .multiselect {
+        text-align: left;
+    }
+</style>*@
+
+<style>
+
+    .dropdown-menu>.disabled>a, .dropdown-menu>.disabled>a:hover, .dropdown-menu>.disabled>a:focus {
+    background-color: #efefef;
+}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        CheckShipping();
+        $('.schoptions').prop('checked', false);
+
+        $('#ddAdOns').multiselect({
+            nonSelectedText: 'None Selected',
+            allSelectedText: false,
+            //buttonWidth: '100%',
+            numberDisplayed: 5
+        });
+
+        //$('.multiselect-native-select').addClass('form-control')
+        $('#DeliveryOption').change(function () {
+            CheckShipping();
+        })
+
+        function CheckShipping()
+        {
+            var value = $('#DeliveryOption').val();
+            if (value == "Ship") {
+                $('#ShippingChargesWrapper').show();
+            }
+            else {
+                $('#ShippingChargesWrapper').hide();
+            }
+        }
+
+        $('#form1').submit(function () {
+            var isFormValid = $('#form1').valid();
+            if (isFormValid == true) {
+                $('select#ddAdOns option').attr("disabled", false);
+            }
+
+        });
+
+    });
+</script>
+
+<div class='page-title'>
+    <h1>Add/ Edit Student</h1>
+</div>
+
+
+<div class="FormWrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <section>
+                @using (Html.BeginForm("AddStudent", "Admin", null, FormMethod.Post, new { @id = "form1", @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.RenderFlashMessages()
+                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                    @Html.Hidden("StudentID", Model == null ? 0 : Model.StudentID)
+                    @Html.Hidden("ClassID", Model == null ? 0 : Model.ClassID)
+                    @Html.Hidden("LocationID", Model == null ? 0 : Model.LocationID)
+                    @Html.Hidden("CourseType", Model == null ? "" : Model.CourseType)
+                    @Html.Hidden("KeycodeBankID", Model == null ? 0 : Model.KeycodeBankID)
+                    @Html.Hidden("PromoCode", Model == null ? "" : Model.PromoCode)
+                    @Html.Hidden("ShippingCostMaterial", Model == null ? 0 : Model.ShippingCostMaterial)
+
+
+                    {
+                        if (Model.StudentID > 0)
+                        {
+                            string url = "/Access/Receipt?id=" + Model.StudentID + "&code=" + Model.ReceiptCode;
+                            <div class="form-group BottomMargin5p">
+                                @Html.Label("", new { @class = "col-md-2 control-label", @style = "padding-top:0px" })
+                                <div class="col-md-10">
+                                    <a target="_blank" href="@url">Print Receipt</a>
+
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <div class="form-group BottomMargin5p">
+                        @Html.LabelFor(m => m.CourseName, new { @class = "col-md-2 control-label", @style = "padding-top:0px" })
+                        <div class="col-md-10">
+                            @Html.DisplayFor(m => m.CourseName, new { @class = "form-control" })
+                            @Html.Hidden("CourseName", Model.CourseName)
+                        </div>
+                    </div>
+
+                    <div class="form-group BottomMargin5p">
+                        @Html.LabelFor(m => m.ScheduleDate, new { @class = "col-md-2 control-label", @style = "padding-top:0px" })
+                        <div class="col-md-10">
+                            @{
+                                if (Model.IsUnSchedule == true)
+                                {
+                                    <span>unassigned</span>
+                                }
+                                else
+                                {
+                                    <span>@Model.ScheduleDate.ToString("ddd M/d/yyyy") from @Model.StartTime to @Model.EndTime</span>
+                                    if (!string.IsNullOrWhiteSpace(Model.ExtraClassTimes))
+                                    {
+                                        <br />
+                                                @Model.ExtraClassTimes
+                                    }
+                                }
+
+                            }
+
+
+
+                            @Html.Hidden("ScheduleDate", Model.ScheduleDate)
+                            @Html.Hidden("StartTime", Model.StartTime)
+                            @Html.Hidden("EndTime", Model.EndTime)
+                        </div>
+                    </div>
+
+
+                            <div class="form-group BottomMargin5p">
+                                @Html.Label("Charges", new { @class = "col-md-2 control-label", @style = "padding-top:0px" })
+                                <div class="col-md-10">
+                                    @Html.Hidden("ClassPrice", Model.ClassPrice)
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>Class: </td>
+                                                <td>@Model.ClassPrice.ToString("C")</td>
+                                            </tr>
+                                            @{
+                                                if (Model.OptionsPrice > 0)
+                                                {
+                                                    <tr>
+                                                        <td>Options: </td>
+                                                        <td>@Model.OptionsPrice.ToString("C")</td>
+                                                    </tr>
+                                                }
+                                                if (Model.DeliveryOption == "Ship")
+                                                {
+                                                    <tr>
+                                                        <td>Shipping: </td>
+                                                        <td>@Model.ShippingPrice.ToString("C")</td>
+                                                    </tr>
+                                                }
+                                                if (Model.OptionsPrice > 0 || Model.DeliveryOption == "Ship")
+                                                {
+                                                    <tr>
+                                                        <td style="border-top:1px solid #aaa"> <b>Total: </b></td>
+                                                        <td style="border-top:1px solid #aaa"> <b>@Model.TotalClassPrice.ToString("C")</b></td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                                                {
+                                                    if (Model != null && Model.StudentID > 0)
+                                                    {
+                                                        <div class="form-group">
+                                                            @Html.Label("Scheduling Options", new { @class = "col-md-2 control-label" })
+                                                            <div class="col-md-10">
+                                                                @Html.DropDownListFor(m => m.RescheduleClassID, DropdownLists.Rescheduling(Model.ClassID), new { @class = "form-control" })
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+
+
+                                                {
+                                                    if (Model.IsPromptCertification)
+                                                    {
+                                                        <div class="form-group">
+                                                            @Html.Label("Type", new { @class = "col-md-2 control-label" })
+                                                            <div class="col-md-10">
+                                                                <div style="border:1px solid lightgray; float:left; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                                                    <div class="col-md-6">
+                                                                        <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                                            <label>
+                                                                                @Html.RadioButtonFor(m => m.CertificationType, "certification", new { @style = "margin-top:1px;" })
+                                                                                Certification
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                                            <label>
+                                                                                @Html.RadioButtonFor(m => m.CertificationType, "rectification", new { @style = "margin-top:1px;" })
+                                                                                Rectification
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+
+                                                    }
+                                                }
+
+
+
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(Model.CourseAddOns))
+                                                    {
+                                                        <div class="form-group">
+                                                            @Html.Label("Add-on Options", new { @class = "col-md-2 control-label", @style = "margin-top:7px" })
+                                                            <div class="col-md-10">
+                                                                <div class="form-control" style="border:none; box-shadow:none; background-color:transparent; padding:0px">
+                                                                    @Html.DropDownListFor(m => m.SelectedAddOns, DropdownLists.ClassAddons(Model.CourseAddOns == null ? "0" : Model.CourseAddOns, Model.SelectedOptions == null ? "0" : Model.SelectedOptions), new { @id = "ddAdOns", multiple = "multiple" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+
+
+                                                {
+                                                    if (Model != null && Model.StudentID > 0 && Model.KeycodeBankID > 0)
+                                                    {
+
+                                                        <div class="form-group">
+                                                            @Html.Label("Payments", new { @class = "col-md-2 control-label", @style = "margin-top:7px" })
+                                                            <div class="col-md-10">
+                                                                @{
+
+                                                                    IEnumerable<EnrolTraining.Models.StudentPayment>
+                                                                    payments = dbc.StudentPayment.Where(x => x.StudentID == Model.StudentID);
+                                                                    if (payments.Count() > 0)
+                                                                    {
+                                                                        <table>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <table class="table table-condensed table-striped table-hover" style="margin-bottom:0px; border:1px solid lightgray">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th>
+                                                                                                        Date
+                                                                                                    </th>
+
+                                                                                                    <th>
+                                                                                                        Type
+                                                                                                    </th>
+                                                                                                    <th>
+                                                                                                        Detail
+                                                                                                    </th>
+                                                                                                    <th>
+                                                                                                        TransID
+                                                                                                    </th>
+                                                                                                    <th>
+                                                                                                        Amount
+                                                                                                    </th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                @{
+                                                                                                    foreach (var payment in payments)
+                                                                                                    {
+                                                                                                        <tr>
+                                                                                                            <td>
+                                                                                                                @payment.PaymentDate.ToString("MM/dd/yyyy")
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @payment.type
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @payment.Detail
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @payment.TransactionID
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @payment.Amount.ToString("C")
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    }
+
+                                                                                                }
+
+                                                                                            </tbody>
+                                                                                        </table>
+
+                                                                                    </td>
+                                                                                    <td style="padding:10px">
+                                                                                        <span style="color:forestgreen; cursor:pointer" class="fa fa-plus" data-toggle="modal" data-target="#myModal"></span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <div style="padding-top:14px">
+                                                                                                            <span>None</span>
+                                                                                                            <span style="color:forestgreen; cursor:pointer" class="fa fa-plus" data-toggle="modal" data-target="#myModal"></span>
+
+                                                                                                        </div>
+                                                                                                    }
+                                                                }
+
+                                                            </div>
+                                                        </div>
+                                                                                                        }
+                                                                                                    }
+
+
+                                                                                                    {
+                                                                                                        if (Model != null && Model.StudentID > 0)
+                                                                                                        {
+                                                                                                            double charges = Model.ClassPrice + Model.OptionsPrice + Model.ShippingPrice;
+                                                                                                            double balance = charges - Model.PaymentsTotal;
+                                                                                                            <div class="form-group">
+                                                                                                                @Html.Label("Balance Due", new { @class = "col-md-2 control-label" })
+                                                                                                                <div class="col-md-10">
+                                                                                                                    <label style="padding-top:7px">@balance.ToString("C")</label>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        }
+                                                                                                    }
+
+
+                                                                                                    {
+                                                                                                        if (Model != null && Model.StudentID > 0 && Model.KeycodeBankID > 0)
+                                                                                                        {
+                                                                                                            <div class="form-group">
+                                                                                                                @Html.Label("Keycode", new { @class = "col-md-2 control-label", @style = "margin-top:7px" })
+                                                                                                                <div class="col-md-10">
+                                                                                                                    @{
+                                                                                                                        if (!string.IsNullOrWhiteSpace(Model.Keycode))
+                                                                                                                        {
+                                                                                                                            <label class="control-label" style="text-align:left; margin-top:7px"> @Model.Keycode</label>
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            <a href="/Admin/AssignKeycodeToCourse?KeyBankID=@Model.KeycodeBankID&StudentID=@Model.StudentID" class="btn btn-primary">Assign</a>
+                                                                                                                        }
+
+                                                                                                                    }
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                                                        }
+                                                                                                                                    }
+
+
+
+
+
+                                                                                                                                    {
+                                                                                                                                        List<EnrolTraining.Models.CourseAdon> lstCourseAddons = dbc.CourseAdon.Where(x => x.StudentID == Model.StudentID).ToList();
+                                                                                                                                        if (lstCourseAddons!= null && lstCourseAddons.Count > 0)
+                                                                                                                                        {
+                                                                                                                                <div class="form-group">
+                                                                                                                                    @Html.Label("Keycode Addons", new { @class = "col-md-2 control-label", @style = "margin-top:7px" })
+                                                                                                                                    <div class="col-md-10">                                                                                                                                        @{
+
+                                                                                                                                            <table style="margin-top:14px">
+                                                                                                                                                <tbody>
+                                                                                                                                                    @{
+
+                                                                                                                                                        foreach (var addon in lstCourseAddons)
+                                                                                                                                                        {
+                                                                                                                                                            if (addon.Type == "KeyCode")
+                                                                                                                                                            {
+
+                                                                                                                                                                {
+                                                                                                                                                                    if (!string.IsNullOrWhiteSpace(addon.Keycode))
+                                                                                                                                                                    {                                                                                                                                                                        <tr>
+                                                                                                                                                                            <td>@addon.Keycode (@addon.AdOnName)</td>
+                                                                                                                                                                            <td></td>
+
+                                                                                                                                                                        </tr>
+                                                                                                                                                                    }
+                                                                                                                                                                    else
+                                                                                                                                                                    {
+                                                                                                                                                                        <tr>
+                                                                                                                                                                            <td>@addon.AdOnName </td>
+                                                                                                                                                                            <td style="margin-right:10px">
+                                                                                                                                                                                <a style="margin-left: 10px;border: 1px solid lightgray;padding: 2px;" href="/Admin/AssignKeycodeToAddOn?AddOnID=@addon.AdonID&StudentID=@Model.StudentID">Assign</a>
+
+                                                                                                                                                                            </td>
+                                                                                                                                                                        </tr>
+
+                                                                                                                                                                    }
+                                                                                                                                                                }
+
+                                                                                                                                                            }
+                                                                                                                                                        }
+                                                                                                                                                    }
+                                                                                                                                                </tbody>
+                                                                                                                                            </table>
+                                                                                                                                        }
+
+                                                                                                                                    </div>
+
+                                                                                                                                </div>
+                                                                                                                                                            }
+                                                                                                                                                        }
+
+
+
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                                                                                                                                                                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                                                                                                                                                                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                                                                                                                                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.PrimaryPhone, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.PrimaryPhone, new { @class = "form-control", @data_val = "false" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.AlternatePhone, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.AlternatePhone, new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.MailingAddress1, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.MailingAddress1, new { @class = "form-control", @data_val = "false" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.MailingAddress2, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.MailingAddress2, new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.MailingCity, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.MailingCity, new { @class = "form-control", @data_val = "false" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.MailingState, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.DropDownListFor(m => m.MailingState, DropdownLists.SelectUSAStates(string.IsNullOrWhiteSpace(Model.MailingState) ? "" : Model.MailingState, true, "-Select-"), new { @class = "form-control", @data_val = "false" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.MailingZip, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.MailingZip, new { @class = "form-control", @data_val = "false" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.Label("Billing Adress", new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                <div class="checkbox">
+                                                                                                                                                                    <label>
+                                                                                                                                                                        @Html.CheckBoxFor(m => m.IsBillingSameAsMailing, new { @style = "margin-top:0px", @checked = "checked" })
+                                                                                                                                                                        Use the above address as my billing address
+                                                                                                                                                                    </label>
+                                                                                                                                                                </div>
+
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.PromoCodeID, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.DropDownListFor(m => m.PromoCodeID, DropdownLists.PromoCodes(CourseID,  Model.PromoCodeID.ToString(), true, "-Choose-"), new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.Label("Client", new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.DropDownListFor(m => m.ClientID, DropdownLists.Clients(Model != null && Model.ClientID != null ? Model.ClientID.ToString() : "0", true, "None"), new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.DeliveryOption, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.DropDownListFor(m => m.DeliveryOption, DropdownLists.DeliveryType(Model == null || string.IsNullOrWhiteSpace(Model.DeliveryOption) ? "0" : Model.DeliveryOption, true, "Not Needed"), new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+
+
+
+                                                                                                                                                        <div id="ShippingChargesWrapper">
+                                                                                                                                                            <div class="form-group">
+                                                                                                                                                                @Html.Label("Shipping Charges", new { @class = "col-md-2 control-label" })
+                                                                                                                                                                <div class="col-md-10">
+                                                                                                                                                                    <span>@Model.ShippingCostMaterial</span>
+                                                                                                                                                                </div>
+                                                                                                                                                            </div>
+
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.Label("Comments/ Requests", new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextAreaFor(m => m.Comments, new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.Codes, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.Codes, new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.Label("Status", new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.DropDownListFor(m => m.StatusID, DropdownLists.StudentStatus(Model == null || Model.StatusID == null ? "0" : Model.StatusID.ToString(), false), new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.Label("Checked In", new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                <div style="border:1px solid lightgray; float:left; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                                                                                                                                                    <div class="col-md-6">
+                                                                                                                                                                        <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                                                                                                                                            <label>
+                                                                                                                                                                                @Html.RadioButtonFor(m => m.CheckedInStatus, "Yes", new { @style = "margin-top:1px;" })
+                                                                                                                                                                                Yes
+                                                                                                                                                                            </label>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="col-md-6">
+                                                                                                                                                                        <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                                                                                                                                                            <label>
+                                                                                                                                                                                @Html.RadioButtonFor(m => m.CheckedInStatus, "No", new { @style = "margin-top:1px;" })
+                                                                                                                                                                                No
+                                                                                                                                                                            </label>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            @Html.LabelFor(m => m.TestScore, new { @class = "col-md-2 control-label" })
+                                                                                                                                                            <div class="col-md-10">
+                                                                                                                                                                @Html.TextBoxFor(m => m.TestScore, new { @class = "form-control" })
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+
+
+
+
+                                                                                                                                                        <hr style="border-color:#e8e6e6" />
+                                                                                                                                                        <div class="form-group">
+                                                                                                                                                            <div class="col-md-offset-2 col-md-10 text-right">
+                                                                                                                                                                <a href="/Admin/KeycodeBanks" class="btn btn-default">Back</a>
+                                                                                                                                                                <input type="submit" value="Save" class="btn btn-success" />
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        }
+            </section>
+        </div>
+
+    </div>
+</div>
+
+<div class='clear'></div>
+
+
+
+@Html.Partial("_AddPayment", new EnrolTraining.Models.StudentPayment { StudentID = Model == null ? 0 :Model.StudentID });

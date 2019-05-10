@@ -1,0 +1,188 @@
+﻿@using Vereyon.Web;
+@{
+    Layout = "~/Views/Shared/_EnrollLayout.cshtml";
+    int locationID = ViewBag.LocationID;
+    int companyID = ViewBag.CompanyID;
+
+}
+
+<link rel="stylesheet" media="screen" href="~/Content/fullcalendar.css" />
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/fullcalendar.min.js"></script>
+
+
+
+<style>
+
+      .fc-toolbar > .fc-right {
+      display: none;
+    }
+
+    td.fc-other-month {
+      color: #fff;
+      font-size: 1px;
+    }
+
+         .fc-event, .fc-event a {
+        color: #111;
+        border-color: #ccc;
+        min-height: 36px;
+      }
+
+     .fc-content > .fc-time {
+            display: none;
+     }
+
+    .fc-day-grid-event > .fc-content{
+        white-space: normal;
+        line-height: 12px;
+     }
+
+
+      a.past-class {
+        background-color: #fbfbfb;
+    }
+
+    a.past-class .fc-title,
+    a.past-class .fc-title b {
+      background-color: #fbfbfb;
+      border-color: #e5e5e5;
+      color: #c8c8c8;
+      cursor: default;
+    }
+
+    td .fc-day-top
+    {
+        padding-top:5px;
+        padding-right:10px;
+    }
+    /*.fc-toolbar > .fc-right {
+      display: none;
+    }
+    .fc-head {
+        background-color: deepskyblue;
+    }
+
+    .fc-widget-header {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .fc-day-number {
+        text-align: center;
+        min-width: 15px;
+        background-color: darkcyan;
+        color: white;
+    }
+
+    .fc-sun {
+        color: #eb2626;
+    }
+
+    .fc .fc-button-group > :first-child {
+        margin-right: 10px;
+    }
+
+    .fc-event, .fc-event a {
+        color: #111;
+        border-color: #ccc;
+        min-height: 36px;
+    }
+
+    .fc-content > .fc-time {
+        display: none;
+    }
+
+    .fc-day-grid-event > .fc-content {
+        white-space: normal;
+        line-height: 12px;
+    }
+
+
+    a.past-class {
+        background-color: #fbfbfb;
+    }
+
+        a.past-class .fc-title,
+        a.past-class .fc-title b {
+            background-color: #fbfbfb;
+            border-color: #e5e5e5;
+            color: #c8c8c8;
+            cursor: default;
+        }
+
+    td .fc-day-top {
+        padding-top: 5px;
+        padding-right: 10px;
+    }*/
+</style>
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+
+        $(document).on('change', '#locationID', function (e) {
+            var form = $('#myform');
+            form.submit();
+
+        });
+
+        var cdt = new Date();
+
+        var fdt = cdt.getFullYear() + "-" + ("0" + (cdt.getMonth() + 2)).slice(-2) + "-" + ("0" + cdt.getDate()).slice(-2) + 'T11:59:41.4539956-04:00'; //'2017-10-23T11:59:41.4539956-04:00',
+        $('li#enrschedlink a').addClass('enractive');
+        $('#enrcalendar1').fullCalendar({
+            events: "/GetScheduledClasses?LocationID=@locationID",
+            fixedWeekCount: false,
+            height: 'auto',
+            eventRender: function (event, element, view) {
+                element.find('span.fc-title').html(element.find('span.fc-title').text());
+                element.attr('title', event.description);
+            }
+        });
+        $('#enrcalendar2').fullCalendar({
+            defaultDate: fdt,
+            events: "/GetScheduledClasses?LocationID=@locationID",
+            fixedWeekCount: false,
+            height: 'auto',
+            eventRender: function (event, element, view) {
+                element.find('span.fc-title').html(element.find('span.fc-title').text());
+                element.attr('title', event.description);
+            }
+        });
+
+
+    });
+</script>
+
+
+
+@Html.RenderFlashMessages()
+
+@using (Html.BeginForm("DualCalendar", "Enroll", null, FormMethod.Post, new { @id = "myform", @class = "form-horizontal", role = "form", @enctype = "multipart/form-data" }))
+{
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>
+            Class Schedule Calendar
+        </h4>
+        <hr />
+        <p>Filter classes by Location</p>
+        @Html.DropDownList("locationID", DropdownLists.LocationsOnCalendar(locationID.ToString(), companyID), new { @class = "form-control" })
+        <hr />
+
+        <p>Join the class by clicking on the available class on the calendar to start enrollment process</p>
+        <hr />
+        <div id="enrcalpnl">
+            <div id="enrcalendar1" class="enrcalendar">
+            </div>
+            <div id="enrcalendar2" style="padding-top:30px" class="enrcalendar">
+            </div>
+        </div>
+        <div id="enrmobilecal">
+
+        </div>
+    </div>
+</div>
+
+}

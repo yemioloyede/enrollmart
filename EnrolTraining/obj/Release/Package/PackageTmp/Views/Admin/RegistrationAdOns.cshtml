@@ -1,0 +1,63 @@
+﻿@using Vereyon.Web
+@model IEnumerable<EnrolTraining.Models.RegistrationAdOn>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        tbl
+        tblsetup('#tbl', true, true, true, -1);
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Registration Add-Ons</h1>
+</div>
+
+@Html.RenderFlashMessages()
+
+    <div class="content-box">
+        <div class="content-box-hdr">
+            <div class="content-hdr-form">
+                <span id="mainContent_filterfields">
+
+                </span>
+                <div class="right-buttons">
+                    <a href="/Admin/AddRegistrationAdOn" class="btn btn-danger btn-xs">New Add-on</a>
+                </div>
+            </div>
+        </div>
+
+            <div class="content-box-table">
+                <table id="tbl" class="enrdatatbl">
+                    <thead>
+                        <tr>
+                            <th>Product Code</th>
+                            <th>Name</th>
+                            <th>Display Order</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var record in Model)
+                            {
+                                <tr>
+                                    <td>@record.ProductCode</td>
+                                    <td>@record.Name</td>
+                                    <td>@record.DisplayOrder</td>
+                                    <td>$@record.Price.ToString("#,###.00") </td>
+                                    <td>
+                                        <a href="/Admin/EditAdOn?id=@record.AdOnID"> <span class="fa fa-edit"></span> </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+
+                </table>
+                </div>
+            </div>

@@ -1,0 +1,65 @@
+﻿@model EnrolTraining.Models.ClassFiltersViewModel
+<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+<script>
+    $(document).ready(function (e) {
+
+        jQuery('#DateForm').datetimepicker({
+            format: 'Y/m/d',
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: jQuery('#DateTo').val() ? jQuery('#DateTo').val() : false
+                })
+            },
+            timepicker: false
+        });
+
+        jQuery('#DateTo').datetimepicker({
+            format: 'Y/m/d',
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: jQuery('#DateForm').val() ? jQuery('#DateForm').val() : false
+                })
+            },
+            timepicker: false
+        });
+    })
+</script>
+
+<div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 style="font-size:22px" class="modal-title">Select Date Range</h4>
+        </div>
+        <div class="modal-body">
+            <form id="mytestform" action="/Admin/@ViewBag.Action" method="post" class="form-horizontal">
+                @Html.Hidden("DateCriteria", "Custom Range")
+                <div class="form-group">
+                    @Html.LabelFor(m => m.DateForm, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.DateForm, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.DateForm, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.DateTo, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.DateTo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.DateTo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </form>
+
+    </div>
+        <div class="modal-footer">
+                <button type="submit" id="range" class="btn btn-success">Show Result</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+
+
+</div>

@@ -1,0 +1,196 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.PromoCode 
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    string alldcourses = Model != null ? Model.CoursesAllowed : "0";
+    var isRestricted = Model == null ? false : Model.IsRestrictUseByCourseType;
+}
+<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+
+<script>
+    $(document).ready(function (e) {
+        jQuery('#StartDate').datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+            startDate: new Date(),
+        });
+        jQuery('#EndDate').datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+            startDate: new Date(),
+        });
+
+        var checkrestricted = "@isRestricted"
+
+        if (checkrestricted == "True")
+        {
+
+            ShowCourses();
+        }
+
+        function ShowCourses()
+        {
+            var url = "/Admin/CoursesAllowed?CoursesAllowed=@alldcourses" // the url to the controller
+            $.get(url, function (data) {
+                $('#CourseTypes').html(data);
+                $('#CourseTypesContainer').show();
+            });
+
+        }
+
+        $('#IsRestrictUseByCourseType').change(function () {
+            if (this.checked) {
+                ShowCourses();
+                //var returnVal = confirm("Are you sure?");
+                //$(this).prop("checked", returnVal);
+            }
+            else
+            {
+                $('#CourseTypesContainer').hide();
+            }
+        });
+    })
+</script>
+
+
+<div class='page-title'>
+    <h1>Add / Edit Promo Code</h1>
+</div>
+
+
+    <div class="FormWrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    @using (Html.BeginForm("AddPromoCode", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                        @Html.RenderFlashMessages()
+                        @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+                        @Html.Hidden("CodeID", Model == null ? 0 : Model.CodeID)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Code, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Code, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                                @Html.LabelFor(m => m.ClientID, new { @class = "col-md-2 control-label" })
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(m => m.ClientID, DropdownLists.CourseDisciplines(Model == null ? "0" : Model.ClientID.ToString(), false), new { @class = "form-control" })
+                                </div>
+                            </div>*@
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StartDate, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.StartDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EndDate, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Type, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                <div style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.RadioButtonFor(m => m.Type, "DollarsOff", new { @style = "margin-top:1px;", @checked = "checked" })
+                                            Dollars Off
+                                        </label>
+                                    </div>
+                                    <div class="radio" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.RadioButtonFor(m => m.Type, "PercentOff", new { @style = "margin-top:1px;" })
+                                            Percentage Off
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Discount, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.Discount, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Discount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NumOfUses, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.NumOfUses, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.NumOfUses, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.IsDiscountForShippingAndAdon, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                <div style="border:1px solid lightgray; padding:10px 10px 0px 10px; border-radius:5px; background-color:white">
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.IsDiscountForShippingAndAdon, new { @style = "margin-top:1px;" })
+                                            Apply the discount to add-on purchases and shipping also
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.IsRestrictUseByCourseType, new { @style = "margin-top:1px;" })
+                                            Restrict use by course type
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" style="padding-top: 0px;margin-bottom: 0px;padding-bottom: 0px;min-height: 0px;">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.IsDeferredPaymentsOnly, new { @style = "margin-top:1px;" })
+                                            Does not reduce the balance due - deferred payments only
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="CourseTypesContainer" style="display:none">
+                            @Html.LabelFor(m => m.CoursesAllowedArray, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10" id="CourseTypes">
+                                
+                            </div>
+                        </div>
+
+
+
+                        <hr style="border-color:#e8e6e6" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10 text-right">
+                                <a href="/Admin/PromoCodes" class="btn btn-default">Cancel</a>
+                                <input type="submit" value="Save" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                    }
+                </section>
+            </div>
+
+        </div>
+    </div>
+    <div class='clear'></div>

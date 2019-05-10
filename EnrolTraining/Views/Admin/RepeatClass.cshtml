@@ -1,0 +1,275 @@
+﻿@using Vereyon.Web
+
+@model EnrolTraining.Models.ScheduleClass
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>*@
+<link rel="stylesheet" media="screen" href="~/Content/bootstrap-datepicker.min.css" />
+<script type="text/javascript" src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<style>
+    .xdsoft_today_button{
+        display:none
+    }
+
+    .xdsoft_prev{
+        display:none
+    }
+
+    .xdsoft_next{
+        display:none
+    }
+</style>
+<script>
+
+    
+
+    $(document).ready(function (e) {
+
+        //var calendars = $("input[id^='ClassDate']");
+
+        var calendars = $(".dpick");
+
+        $.each(calendars, function (e) {
+            var min = $(this).attr('data-MinDate');
+            var max = $(this).attr('data-MaxDate');
+
+            $(this).datepicker({
+                format: "yyyy-mm-dd",
+                minViewMode: 0,
+                maxViewMode: 0,
+                autoclose: true,
+                startDate: min,
+                endDate: max,
+                multidate: true
+            });
+
+
+            //$(this).datetimepicker({
+            //    timepicker: false,
+            //    inline: true,
+            //    //formatDate: 'Y/m/d',
+            //    startDate: min,
+            //    endDate: max,
+            //    onGenerate: function (ct, element) {
+            //        var abc = element;
+            //    }
+            //});
+
+        })
+
+    });
+</script>
+
+@*<script>
+
+    function AddClassTime() {
+        $('.fa-trash').hide();
+        var container = $('#ClassTimeContainer');
+        var number = container.find('.col-md-10').length;
+        var els = '<div class="col-md-10 col-md-offset-2"><div class="col-md-3" style="padding-left:0px"><input class="form-control" data-val="true" data-val-required="Please select a start date" id="ClassDate' + number + '" name="ClassDate[' + number + ']" type="text" value=""><span class="text-danger" data-valmsg-for="ClassDate[' + number + ']" data-valmsg-replace="true"></span></div><div class="col-md-1" style="top:10px; text-align:right"><span>From</span></div><div class="col-md-3" style="padding-left:0px; "><input class="form-control" data-val="true" data-val-required="Please select Time From" id="TimeFrom' + number + '" name="TimeFrom[' + number + ']" type="text" value="" ><span class="text-danger" data-valmsg-for="TimeFrom[' + number + ']" data-valmsg-replace="true"></span></div><div class="col-md-1" style="top:10px; text-align:right"><span>To</span></div><div class="col-md-3" style="padding-left:0px;"> <input class="form-control" data-val="true" data-val-required="Please select Time To" id="TimeTo' + number + '" name="TimeTo[' + number + ']" type="text" value=""><span class="text-danger" data-valmsg-for="TimeTo[' + number + ']" data-valmsg-replace="true"></span></div><div class="col-md-1" style="top:10px;"> <span class="fa fa-trash" style="color:red; cursor:pointer"></span></div></div>';
+        container.append(els);
+
+        var form = $('#myform').removeData("validator").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse(form);
+
+        $("input[id^='ClassDate']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+            startDate: new Date(),
+        });
+
+        jQuery("input[id^='TimeFrom']").datetimepicker({
+            datepicker: false,
+            format: 'g:i A',
+            formatTime: 'g:i A',
+            step: 15,
+        });
+
+        jQuery("input[id^='TimeTo']").datetimepicker({
+            datepicker: false,
+            format: 'g:i A',
+            formatTime: 'g:i A',
+            step: 15,
+        });
+
+    }
+
+    $(document).ready(function (e) {
+
+        $(document).on('click', '.fa-trash', function () {
+            var row = $(this).closest('.col-md-10');
+            row.prev().find('.fa-trash').show();
+            row.remove();
+        })
+
+        $("input[id^='ClassDate']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+            startDate: new Date(),
+        });
+
+        jQuery("input[id^='TimeFrom']").datetimepicker({
+            datepicker: false,
+            format: 'g:i A',
+            formatTime: 'g:i A',
+            step: 15,
+        });
+
+        jQuery("input[id^='TimeTo']").datetimepicker({
+            datepicker: false,
+            format: 'g:i A',
+            formatTime: 'g:i A',
+            step: 15,
+        });
+    })
+</script>*@
+
+<div class='page-title'>
+    <h1>Repeat Class</h1>
+</div>
+
+@Html.RenderFlashMessages()
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form" style="padding-top:8px; font-size:14px">
+        </div>
+    </div>
+    <div class="FormWrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    @using (Html.BeginForm("RepeatClass", "Admin", null, FormMethod.Post, new { @id = "myform", @class = "form-horizontal", role = "form", @enctype = "multipart/form-data" }))
+                    {
+                        @Html.Hidden("ClassID", Model == null ? 0 : Model.ClassID)
+                        @Html.Hidden("ScheduleDate", Model == null ? DateTime.Now : Model.ScheduleDate)
+                        <div class="col-md-12">
+                            <table class="table table-condensed table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center" style="color:green; font-size:18px">@Model.CourseName</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Date/Time:</strong>
+                                        </td>
+                                        <td>
+                                            @Model.ScheduleDate.ToString("ddd M/d/yyyy") at @Model.StartTime 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Instructor</strong>
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Location:</strong>
+                                        </td>
+                                        <td>
+                                            @Model.Location
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-center text-success"> <strong> Click in the calendars to select/ de-select repeating days</strong></p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @{
+                                    DateTime scheduledate = DateTime.Now.AddMonths(-1);
+                                    for (int i = 0; i < 12; i++)
+                                    {
+                                    scheduledate =  scheduledate.AddMonths(1);
+                                    var startDate = new DateTime(scheduledate.Year, scheduledate.Month, 1);
+                                    var endDate = startDate.AddMonths(1).AddDays(-1);
+                                    <div style="float:left; background-color:white; padding:10px; margin:15px; border:1px solid lightgray" class="dpick" data-MinDate="@startDate.ToString("yyyy/MM/dd")" data-MaxDate="@endDate.ToString("yyyy/MM/dd")" >
+                                        <input name="RepeatDates[@i]" type="hidden">
+                                    </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+
+
+                            @*<div class="form-group">
+                                @Html.LabelFor(m => m.ClassDate, new { @class = "col-md-2 control-label" })
+                                <div id="ClassTimeContainer">
+
+                                    @{
+                                        int count = Model.ClassDate == null ? 0 : Model.ClassDate.Count();
+                                        int i = 0;
+                                        do
+                                        {
+                                            string dd = Model.ClassDate == null ? "" : Model.ClassDate[i].ToString("MM/dd/yy");
+                                            string tf = Model.TimeFrom == null ? "" : Model.TimeFrom[i];
+                                            string tt = Model.TimeTo == null ? "" : Model.TimeTo[i];
+                                            string offset = i > 0 ? "col-md-offset-2" : "";
+                                            <div class="col-md-10  @offset">
+                                                <div class="col-md-3" style="padding-left:0px">
+                                                    <input class="form-control" data-val="true" data-val-required="Please select a start date" id="ClassDate" @i name="ClassDate[@i]" type="text" value="@dd">
+                                                    <span class="text-danger" data-valmsg-for="ClassDate[@i]" data-valmsg-replace="true"></span>
+                                                </div>
+                                                <div class="col-md-1" style="top:10px; text-align:right">
+                                                    <span>From</span>
+                                                </div>
+                                                <div class="col-md-3" style="padding-left:0px; ">
+                                                    <input class="form-control" data-val="true" data-val-required="Please select time from" id="TimeFrom" @i name="TimeFrom[@i]" type="text" value="@tf">
+                                                    <span class="text-danger" data-valmsg-for="TimeFrom[@i]" data-valmsg-replace="true"></span>
+                                                </div>
+                                                <div class="col-md-1" style="top:10px; text-align:right">
+                                                    <span>To</span>
+                                                </div>
+                                                <div class="col-md-3" style="padding-left:0px;">
+                                                    <input class="form-control" data-val="true" data-val-required="Please select time to" id="TimeTo" @i name="TimeTo[@i]" type="text" value="@tt">
+                                                    <span class="text-danger" data-valmsg-for="TimeTo[@i]" data-valmsg-replace="true"></span>
+                                                </div>
+                                                @if (i == 0)
+                                                {
+                                                    <div class="col-md-1" style="top:10px;">
+                                                        <span class="fa fa-plus" style="color:green; cursor:pointer" onclick="AddClassTime()"></span>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    string show = (i == count - 1) ? "block" : "none";
+                                                    <div class="col-md-1" style="top:10px; ">
+                                                        <span class="fa fa-trash" style="color:red; cursor:pointer; display:@show"></span>
+                                                    </div>
+                                                }
+                                            </div>
+                                            i++;
+                                        }
+                                        while (i < count);
+                                    }
+                                </div>
+                            </div>*@
+
+                            <hr style="border-color:#e8e6e6" />
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10 text-right">
+                                    <a href="/Admin/EditClass?id=@Model.ClassID" class="btn btn-default">Back</a>
+                                    <input type="submit" value="Repeat the Classes" class="btn btn-success" />
+                                </div>
+                            </div>
+                       }
+                </section>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+<div class='clear'></div>
+

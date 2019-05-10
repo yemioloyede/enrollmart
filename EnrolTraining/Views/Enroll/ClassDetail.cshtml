@@ -1,0 +1,143 @@
+﻿@model EnrolTraining.Models.ClassDetailViewModel
+@{
+    Layout = "~/Views/Shared/_EnrollLayout.cshtml";
+    string cls = string.IsNullOrWhiteSpace(Model.CourseImage) ? "col-md-12" : "col-md-8";
+}
+
+<link rel="stylesheet" media="screen" href="~/css/bootstrap-multiselect.css" />
+<script src="~/Scripts/bootstrap-multiselect.js"></script>
+
+<style type="text/css">
+    .multiselect-container {
+        width: 100% !important;
+    }
+
+    .multiselect
+    {
+        text-align: left;
+    }
+</style>
+
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $('#ddAdOns').multiselect({
+            nonSelectedText: 'None Selected',
+            buttonWidth: '100%',
+            numberDisplayed: 5
+        });
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-9">
+        <form method="post" id="form1" action="/StudentRegistration">
+            @Html.Hidden("ClassID", Model.ClassID)
+            @Html.Hidden("ScheduleDate", Model.ScheduleDate)
+            @Html.Hidden("iid", (int) ViewBag.iid)
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>
+                        Class Enrollment
+                    </h4>
+                    <hr style="margin-top:5px" />
+                    @{
+                        if (!string.IsNullOrWhiteSpace(Model.CourseImage))
+                        {
+                            <div class="col-md-4">
+                                <img src="@Model.CourseImage" style="max-width:100%; height:auto" />
+                            </div>
+                        }
+                    }
+                    <div class="@cls">
+                        <table class="table table-condensed table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" class="text-center" style="color:green; font-size:18px">@Model.CourseName</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Date/Time:</strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            @Model.ScheduleDate.ToString("ddd M/d/yyyy") from @Model.StartTime to @Model.EndTime
+                                        </strong>
+                                        @{ 
+                                            if (!string.IsNullOrWhiteSpace(Model.ExtraClasses))
+                                            {
+                                                <br />
+                                                 @Model.ExtraClasses
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <strong>Location:</strong>
+                                    </td>
+                                    <td>
+                                        @Model.Location
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <strong>Class Price:</strong>
+                                    </td>
+                                    <td>
+                                        @Model.ClassPrice.ToString("C")
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="margin-top:50px">
+                    @Html.Raw(Model.CourseDescription)
+                </div>
+            </div>
+
+            @{
+                if (!string.IsNullOrWhiteSpace(Model.CourseAddOns))
+                {
+                    <div class="row" style="margin-top:25px; padding:20px; background-color:whitesmoke">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SelectedAddOns, new { @class = "col-md-1 control-label", @style = "margin-top:7px" })
+                                <div class="col-md-11">
+                                    @Html.DropDownListFor(m => m.SelectedAddOns, DropdownLists.ClassAddons(Model.CourseAddOns == null ? "0" : Model.CourseAddOns), new { @class = "form-control", @id = "ddAdOns", multiple = "multiple" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10 text-right">
+                            <input type="submit" value="Continue Registration" class="btn btn-success" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+    @{
+        Html.RenderAction("RegistrationRightPanel", "Enroll");
+    }
+</div>
+
+

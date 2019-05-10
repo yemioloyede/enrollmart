@@ -1,0 +1,267 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.ClassFiltersViewModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Context db = new Context();
+    string showrange = Model != null && Model.DateCriteria == "Custom Range" ? "true" : "false";
+
+    var query = (from schedule in db.ScheduleClass
+                 join course in db.CourseType on schedule.CourseID equals course.CourseTypeID
+                 join instructor in db.User on schedule.InstructorID equals instructor.UserID into ps
+                 from instructor in ps.DefaultIfEmpty()
+                 where schedule.CompanyID == EnrolTraining.Common.SessionWrapper.Current.CompanyID
+                 select new { LocationID = schedule.LocationID, InstructorFirstName = instructor == null ? "" : instructor.FirstName, InstructorLastName = instructor == null ? "" : instructor.LastName, CourseID = schedule.CourseID, InstructorID = schedule.InstructorID, ClassID = schedule.ClassID, ClassNo = schedule.ClassNo, Course = course.CourseName, ScheduleDate = schedule.ScheduleDate, StartTime = schedule.StartTime, MaxStudents = schedule.MaxStudents, RegisteredStudents = db.Student.Where(x => x.ClassID == schedule.ClassID && x.IsUnSchedule == false).Count() });
+
+
+    DateTime Last30Days = DateTime.Now.Date.AddDays(-30);
+    if (Model == null)
+    {
+        query = query.Where(x => x.ScheduleDate >= Last30Days && x.ScheduleDate < DateTime.Today);
+    }
+
+    if (Model != null && Model.DateCriteria == null)
+    {
+        query = query.Where(x => x.ScheduleDate >= Last30Days && x.ScheduleDate < DateTime.Today);
+    }
+
+    if (Model != null && Model.CourseID > 0)
+    {
+        query = query.Where(x => x.CourseID == Model.CourseID);
+    }
+
+    if (Model != null && Model.LocationID > 0)
+    {
+        query = query.Where(x => x.LocationID == Model.LocationID);
+    }
+
+    if (Model != null && Model.InstructorID > 0)
+    {
+        query = query.Where(x => x.InstructorID == Model.InstructorID);
+    }
+
+    if (Model != null && Model.DateCriteria == "All Dates")
+    {
+        query = query.Where(x => x.ScheduleDate < DateTime.Today);
+    }
+
+    else if (Model != null && Model.DateCriteria == "Last 30 Days")
+    {
+        query = query.Where(x => x.ScheduleDate >= Last30Days && x.ScheduleDate < DateTime.Today);
+    }
+    else if (Model != null && Model.DateCriteria == "Last 90 Days")
+    {
+        DateTime Last90Days = DateTime.Today.AddDays(-90);
+        query = query.Where(x => x.ScheduleDate >= Last90Days && x.ScheduleDate < DateTime.Today);
+    }
+    else if (Model != null && Model.DateCriteria == "Custom Range")
+    {
+        query = query.Where(x => x.ScheduleDate >= Model.DateForm.Date && x.ScheduleDate <= Model.DateTo.Date);
+    }
+
+    var results = query.Select(x => new EnrolTraining.Models.ClassesViewModel
+    {
+        ClassID = x.ClassID,
+        ClassNo = x.ClassNo,
+        Course = x.Course,
+        ScheduleDate = x.ScheduleDate,
+        StartTime = x.StartTime,
+        MaxStudents = x.MaxStudents,
+        Instructor = x.InstructorFirstName + " " + x.InstructorLastName,
+        RegisteredStudents = x.RegisteredStudents
+    });
+
+
+    IEnumerable<EnrolTraining.Models.ClassesViewModel> classes = results;
+
+
+}
+
+<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(e)
+    {
+        var isShowRange = @showrange;
+        if (isShowRange == true)
+        {
+            $('#range').show();
+        }
+        else
+        {
+            $('#range').hide();
+        }
+
+        $(document).on('click', '#searchrange', function (e) {
+            var form = $('#filterForm');
+            form.submit();
+
+        });
+
+        jQuery('#DateForm').datetimepicker({
+            format: 'Y/m/d',
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: jQuery('#DateTo').val() ? jQuery('#DateTo').val() : new Date(new Date().setDate(new Date().getDate()-1))
+                })
+            },
+            timepicker: false
+        });
+
+        jQuery('#DateTo').datetimepicker({
+            format: 'Y/m/d',
+            maxDate: new Date(new Date().setDate(new Date().getDate()-1)),
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: jQuery('#DateForm').val() ? jQuery('#DateForm').val() : false
+                })
+            },
+            timepicker: false
+        });
+
+        tblsetup('#tbl', true, true, true, -1);
+
+        $('#CourseID').change(function (e) {
+            var form = $('#filterForm');
+            form.submit();
+        })
+
+        $('#LocationID').change(function (e) {
+            var form = $('#filterForm');
+            form.submit();
+        })
+
+        $('#InstructorID').change(function (e) {
+            var form = $('#filterForm');
+            form.submit();
+        })
+
+        $('#DateCriteria').change(function (e) {
+            var criteria = $(this).val();
+            if (criteria == "Custom Range")
+            {
+                $('#range').show();
+                //var url = "/Admin/GetCustomDateRange"; // the url to the controller
+                //$.get(url, function (data) {
+                //    $('#MyModelcontainer').html(data);
+                //    $('#MyModel').modal('show');
+                //});
+
+            }
+            else
+            {
+                $('#range').hide();
+                var form = $('#filterForm');
+                form.submit();
+            }
+        })
+
+    })
+</script>
+
+<div class='page-title'>
+    <h1>Past Classes</h1>
+</div>
+
+@Html.RenderFlashMessages()
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form">
+
+            <form id="filterForm" method="post" action="/Admin/PastClasses" class="form-horizontal">
+                <div class="modal fade" id="MyModel" aria-hidden="true">
+                    <div id="MyModelcontainer"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(m => m.DateCriteria, EnrolTraining.DropdownLists.PastClassDateFilter(Model == null ? "" : Model.DateCriteria, false), new { @class = "form-control", @style = "height:28px" })
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(m => m.CourseID, EnrolTraining.DropdownLists.CoursTypes(Model == null ? "0" : Model.CourseID.ToString(), true, "All Courses"), new { @class = "form-control", @style = "height:28px" })
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(m => m.LocationID, EnrolTraining.DropdownLists.Locations(Model == null ? "0" : Model.LocationID.ToString(), true, "All Locations"), new { @class = "form-control", @style = "height:28px" })
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(m => m.InstructorID, EnrolTraining.DropdownLists.Instructors(Model == null ? "0" : Model.InstructorID.ToString(), true, "All Instructors"), new { @class = "form-control", @style = "height:28px" })
+                        </div>
+
+                        <div class="col-md-4">
+                            <div id="range" style="display:none">
+                                <div class="input-group input-daterange">
+                                    @Html.TextBoxFor(m => m.DateForm, new { @class = "form-control", @style = "height:28px" })
+                                    @Html.ValidationMessageFor(m => m.DateForm, "", new { @class = "text-danger" })
+
+
+                                    <div class="input-group-addon">to</div>
+
+                                    @Html.TextBoxFor(m => m.DateTo, new { @class = "form-control", @style = "height:28px" })
+                                    @Html.ValidationMessageFor(m => m.DateTo, "", new { @class = "text-danger" })
+
+                                    <div class="input-group-addon" id="searchrange" >
+                                        <span style="cursor:pointer" class="fa fa-search"></span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-md-2 text-right">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="content-box-table">
+        <table id="tbl" class="enrdatatbl">
+            <thead>
+                <tr>
+                    <th>Class Date & Time</th>
+                    @{
+                        if (EnrolTraining.Common.SessionWrapper.Current.ClassNumberSetting != 2)
+                        {
+                            <th>Class#</th>
+                        }
+                    }
+                    <th>Course</th>
+                    <th>Instructor</th>
+                    <th>Enrolled</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var record in classes)
+                    {
+                        <tr>
+                            <td>@record.ScheduleDate.ToString("ddd") @record.ScheduleDate.ToString("M/d/yy") @record.StartTime</td>
+                            @{
+                                if (EnrolTraining.Common.SessionWrapper.Current.ClassNumberSetting != 2)
+                                {
+                                    <td>@record.ClassNo</td>
+
+                                }
+                            }
+                            <td>@record.Course</td>
+                            <td>@record.Instructor</td>
+                            <td>@record.RegisteredStudents / @record.MaxStudents</td>
+                            <td>
+                                <a href="/Admin/EditClass?id=@record.ClassID"> <span class="fa fa-edit"></span> </a>
+                            </td>
+                        </tr>
+                                }
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

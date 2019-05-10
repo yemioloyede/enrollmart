@@ -1,0 +1,423 @@
+﻿@using Vereyon.Web
+@model EnrolTraining.Models.User
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    EnrolTraining.Context db = new EnrolTraining.Context();
+    int InstructorID = Model.UserID;
+}
+
+<link rel="stylesheet" media="screen" href="~/Content/jquery.datetimepicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.datetimepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="~/css/fileinput.css" />
+<script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
+
+<style>
+    .kv-file-content {
+        display: none;
+    }
+
+    .fileinput-remove {
+        display: none;
+    }
+</style>
+
+<script>
+    //Optional: turn the chache off
+    $(function () {
+
+        $.ajaxSetup({ cache: false });
+
+        $('#btnAddCertification').click(function () {
+            ShowPopup(this);
+            return false;
+        });
+
+        $('#btnAddActivity').click(function () {
+            ShowPopup(this);
+            return false;
+        });
+
+        $(document).on('click', '.EditCertification', function () {
+            ShowPopup(this);
+            return false;
+        });
+        $(document).on('click', '.EditActivity', function () {
+            ShowPopup(this);
+            return false;
+        });
+
+    })
+
+    function ShowPopup(link)
+    {
+        var cls = link.className;
+        $('#MyModelcontainer').load(link.href, function () {
+            var mdl = this;
+            $('#MyModel').modal({
+                backdrop: 'static',
+                keyboard: true
+            }, 'show');
+            bindForm(mdl);
+        });
+    }
+
+    function GetInstructorCertifications()
+    {
+        var url = "/Admin/InstructorCertifications?InstructorID=@Model.UserID"; // the url to the controller
+        $.get(url, function (data) {
+            $('#InstructorCertifications').html(data);
+
+        });
+    }
+
+    function GetInstructorActivities()
+    {
+        var url = "/Admin/InstructorActivities?InstructorID=@Model.UserID"; // the url to the controller
+        $.get(url, function (data) {
+            $('#InstructorActivities').html(data);
+
+        });
+    }
+
+    function bindForm(dialog) {
+        $.validator.unobtrusive.parse('form');
+        $('form', dialog).submit(function () {
+            var isValid = $(this).valid();
+            if (isValid)
+            {
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        if (result.success) {
+                            $('#MyModel').modal('hide');
+                            GetInstructorCertifications();
+                            GetInstructorActivities();
+                            // Refresh:
+                            // location.reload();
+                        } else {
+                            $('#MyModelcontainer').html(result);
+                            bindForm();
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+    }
+
+</script>
+
+<script>
+    $(document).ready(function (e) {
+
+        GetInstructorCertifications();
+        GetInstructorActivities();
+
+        var $input = $("#documents");
+        $input.fileinput({
+            uploadUrl: "/Admin/UploadInstructorDocuments?id=@Model.UserID", // server upload action
+            uploadAsync: false,
+            showPreview: false,
+            showUpload: false, // hide upload button
+            showRemove: false, // hide remove button
+            //allowedFileExtensions: ['jpg', 'png', 'gif'],
+            minFileCount: 1,
+            maxFileCount: 5,
+        }).on("filebatchselected", function (event, files) {
+            $input.fileinput('upload');
+        }).on('filebatchuploadsuccess', function (event, data) {
+            $.get("/Admin/GetInstructorDocs?id=@Model.UserID", function (data) {
+                $('#docsuploaded').html(data);
+            });
+
+        });
+
+
+        $(document).on('click', '.fffuuu', function () {
+            var file = $(this).attr('data-file'); // the id that's given to each button in the list
+            var url = '@Url.Action("DeleteInstructorDocs", "Admin")?FileName=' + encodeURIComponent('' + file + '') + '&id=' + @Model.UserID;
+            $.get( url , function (data) {
+                $('#docsuploaded').html(data);
+            });
+        });
+
+        $("input[name^='fromDate']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+        });
+
+        $("input[name^='toDate']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+        });
+
+        $("input[name^='MonitorDate']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+        });
+
+        $("input[name^='DuesPaidThru']").datetimepicker({
+            timepicker: false,
+            format: 'm/d/y',
+        });
+
+    });
+
+</script>
+
+<div class='page-title'>
+    <h1>Instructor Records - @Model.LastName  @Model.FirstName</h1>
+</div>
+@Html.RenderFlashMessages()
+
+<div class="content-box">
+    <div class="content-box-hdr">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+            Basic Information
+            <div class="right-buttons" style="margin-bottom:8px">
+                <a href="/Admin/EditUser?id=@Model.UserID&view=instructor" class="btn btn-danger btn-xs">Edit Info</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="FormWrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    @using (Html.BeginForm("InstructorUpdateBasic", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.Hidden("UserID", Model.UserID)
+                        var info = Model.FirstName + " " + Model.LastName;
+                        if (!string.IsNullOrWhiteSpace(Model.Address1))
+                        {
+                            info = info + Environment.NewLine + Model.Address1;
+                        }
+                        if (!string.IsNullOrWhiteSpace(Model.Address2))
+                        {
+                            info = info + Environment.NewLine + Model.Address2;
+                        }
+                        if (!string.IsNullOrWhiteSpace(Model.City))
+                        {
+                            info = info + Environment.NewLine + Model.City + ", " + Model.State + " " + Model.Zip;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(Model.PhoneNo))
+                        {
+                            info = info + Environment.NewLine +  Model.PhoneNo;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(Model.EmailAddress))
+                        {
+                            info = info + Environment.NewLine + Model.EmailAddress;
+                        }
+
+                        info = info + Environment.NewLine;
+
+                        if (!string.IsNullOrWhiteSpace(Model.AHAInstructorID))
+                        {
+                            info = info + Environment.NewLine + Model.AHAInstructorID;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(Model.ASHIInstructorID))
+                        {
+                            info = info + Environment.NewLine + Model.ASHIInstructorID;
+                        }
+
+                        <div class="form-group">
+                            @Html.Label("Contact Info", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.Raw(Html.Encode(info).Replace("\n", "<br />"))
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Monitor Date", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.MonitorDate, new { @class = "form-control NumberField" })
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            @Html.Label("Dues Paid Thru", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.DuesPaidThru, new { @class = "form-control NumberField" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.Label("Notes", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(m => m.Notes, 5, 0, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+
+                        <hr style="border-color:#e8e6e6" />
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9 text-right">
+                                <input type="submit" value="Update" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                    }
+
+                </section>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class='clear'></div>
+
+
+
+<div class="content-box">
+    <div class="content-box-hdr" style="border-bottom:0px">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+            Instructor Certifications
+
+            <div class="right-buttons" style="margin-bottom:8px">
+                <a href="/Admin/AddInstructorCertification?id=@Model.UserID" id="btnAddCertification" class="btn btn-danger btn-xs">Add Certification</a>
+            </div>
+
+        </div>
+
+        
+            <div id="InstructorCertifications">
+
+            </div>
+        
+
+
+    </div>
+
+
+</div>
+<div class='clear'></div>
+
+
+
+<div class="content-box">
+    <div class="content-box-hdr" style="border-bottom:0px">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+            Activity/ Event Log
+
+            <div class="right-buttons" style="margin-bottom:8px">
+                <a href="/Admin/AddInstructorActivity?id=@Model.UserID" id="btnAddActivity" class="btn btn-danger btn-xs">Add Entry</a>
+            </div>
+        </div>
+
+        <div id="InstructorActivities">
+
+        </div>
+
+
+    </div>
+
+
+</div>
+<div class='clear'></div>
+
+
+
+
+<div class="content-box">
+    <div class="content-box-hdr" style="border-bottom:0px">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+            Documents
+
+            <div class="right-buttons" style="margin-bottom:8px">
+
+            </div>
+        </div>
+        <div style="padding-top:20px; margin-top:20px; background-color:white; padding-bottom:10px">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input id="documents" type="file" name="Documents[]" class="file-loading" data-elErrorContainer="#fileerror" multiple />
+                            <div id="fileerror"></div>
+                            <div id="docsuploaded">
+                                @Html.Action("GetInstructorDocs", "Admin", new { id = Model.UserID })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+</div>
+<div class='clear'></div>
+
+
+<div class="content-box">
+    <div class="content-box-hdr" style="border-bottom:0px">
+        <div class="content-hdr-form" style="padding-top:13px; font-size:14px">
+        @using (Ajax.BeginForm("InstructorCourses", "Admin", null, new AjaxOptions
+        {
+            HttpMethod = "POST",
+            InsertionMode = InsertionMode.Replace,
+            UpdateTargetId = "dvCourseDetail",
+        }, new { @id = "form1", @class = "form-horizontal" }))
+        {
+            @Html.Hidden("InstructorID", Model.UserID)
+            <div class="col-md-12">
+                <div class="col-md-2">
+                    <label style="padding-top:10px">
+                        Course Counts
+                    </label>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="fromDate" class="form-control" value="@DateTime.Now.AddYears(-1).ToString("MM/dd/yy")" />
+                </div>
+                <div class="col-md-1" style="max-width:10px; padding:0px">
+                    <label style="padding-top:10px">
+                        to
+                    </label>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="toDate" class="form-control" value="@DateTime.Now.ToString("MM/dd/yy")" />
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" value="Go" class="btn btn-primary" />
+                </div>
+            </div>
+        }
+
+            <div class="right-buttons" style="margin-bottom:8px">
+
+            </div>
+        </div>
+        <div id="dvCourseDetail">
+            @{
+                Html.RenderAction("InstructorCourses", "Admin", new { fromDate = DateTime.Now.Date.AddYears(-1), toDate = DateTime.Now.Date, InstructorID = Model.UserID });
+            }
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="MyModel" aria-hidden="true">
+    <div id="MyModelcontainer"></div>
+</div>
+
+
+<div class='clear'></div>
+

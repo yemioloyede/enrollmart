@@ -1,0 +1,217 @@
+﻿@model EnrolTraining.Models.Student
+
+@{
+    string materials = "";
+    double shippingCharges = 0;
+
+    if (Model.ShowDeliveryOptions)
+    {
+        materials = Model.DeliveryOption;
+        if (materials == "Ship")
+        {
+            shippingCharges = Convert.ToDouble(Model.ShippingCostMaterial);
+        }
+    }
+
+    double charges = Model.ClassPrice + Model.OptionsPrice + shippingCharges;
+    double payableAmount = charges - Model.DiscountPrice;
+
+    @Html.Hidden("TotalClassPrice", charges)
+    @Html.Hidden("ShippingPrice", shippingCharges)
+    @Html.Hidden("DiscountPrice", Model.DiscountPrice)
+    @Html.Hidden("PromoCodeID", Model.PromoCodeID)
+
+    string name = Model.FirstName + " " + Model.LastName;
+    string address = Model.MailingAddress1 + (string.IsNullOrWhiteSpace(Model.MailingAddress2) ? Environment.NewLine : Environment.NewLine + Model.MailingAddress2 + Environment.NewLine) + Model.MailingCity + ", " + Model.MailingState + " " + Model.MailingZip;
+
+    string paymentmethod = "";
+    if (Model.PaymentType == 1)
+    {
+        paymentmethod = "Paypal";
+    }
+    else if (Model.PaymentType == 2)
+    {
+        paymentmethod = "Credit Card";
+    }
+    else if (Model.PaymentType == 3)
+    {
+        paymentmethod = "Pay on Arrival";
+    }
+
+
+}
+
+<div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
+                <h4 class="modal-title">Review Registration</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="form-group BottomMargin5p">
+                            @Html.LabelFor(m => m.CourseName, new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                                @Html.DisplayFor(m => m.CourseName, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group BottomMargin5p">
+                            @Html.LabelFor(m => m.ScheduleDate, new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                                @Model.ScheduleDate.ToString("ddd M/d/yyyy") from @Model.StartTime to @Model.EndTime
+                            </div>
+                        </div>
+
+                        <div class="form-group BottomMargin5p">
+                            @Html.LabelFor(m => m.Location, new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                                @Html.DisplayFor(m => m.Location, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        @{
+                            if (Model.IsAcceptedPromoCode)
+                            {
+                                <div class="form-group BottomMargin5p" style="margin-bottom:30px">
+                                    @Html.Label("Promo Discount", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                                    <div class="col-md-8">
+                                        $ <span id="charges">@Model.DiscountPrice.ToString()</span>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+                        <div class="form-group BottomMargin5p" style="margin-bottom:30px">
+                            @Html.Label("Total Payable Charges", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                                $ <span id="charges">@payableAmount.ToString()</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group BottomMargin5p" >
+                            @Html.Label("Name", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                                @name
+                            </div>
+                        </div>
+
+                        <div class="form-group BottomMargin5p">
+                            @Html.LabelFor(m => m.Email, new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                                @Html.DisplayFor(m => m.Email, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group BottomMargin5p">
+                            @Html.Label("Phone", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                                @Html.DisplayFor(m => m.PrimaryPhone, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group BottomMargin5p">
+                            @Html.Label("Mailing Address", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                              @Html.Raw(Html.Encode(address).Replace("\n", "<br />"))  
+                            </div>
+                        </div>
+
+                        <div class="form-group BottomMargin5p">
+                            @Html.Label("Payment Method", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                            <div class="col-md-8">
+                                @paymentmethod
+                            </div>
+                        </div>
+
+                        @{
+                            if (Model.PaymentType == 2)
+                            {
+                                string expiration = Model.ExpirationMonth + "/" + Model.ExpirationYear;
+
+                                <div class="form-group BottomMargin5p">
+                                    @Html.Label("Card Number", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                                    <div class="col-md-8">
+                                        @Model.CardNo
+                                    </div>
+                                </div>
+
+                                <div class="form-group BottomMargin5p">
+                                    @Html.Label("Expiration", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                                    <div class="col-md-8">
+                                        @expiration
+                                    </div>
+                                </div>
+
+                                <div class="form-group BottomMargin5p">
+                                    @Html.Label("Card Security Code", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                                    <div class="col-md-8">
+                                        @Model.SecurityCode
+                                    </div>
+                                </div>
+
+
+                            }
+                        }
+
+                        @{
+                            if (Model.ShowDeliveryOptions)
+                            {
+                                <div class="form-group BottomMargin5p">
+                                    @Html.Label("Materials", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                                    <div class="col-md-8">
+                                        @materials
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+                        @{
+                            if (!string.IsNullOrWhiteSpace(Model.Comments))
+                            {
+                                <div class="form-group BottomMargin5p">
+                                    @Html.Label("Comments", new { @class = "col-md-4 control-label", @style = "padding-top:0px" })
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(m => m.Comments, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            }
+                        }
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Make Changes</button>
+                            @{
+                                if (Model.PaymentType == 1)
+                                {
+                                    <button type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing..." data-form-action="/ProceedToPaypal" class="btn btn-success">Proceed To Paypal</button>
+                                    //Html.ActionLink("Proceed To Paypal", "ProceedToPaypal", new { @st = Json.Encode(Model) }, new { @class = "btn btn-primary"});
+                                }
+                                else
+                                {
+                                    //Html.ActionLink("Complete Registration", "CompleteRegistration", new { @st = Json.Encode(Model) }, new { @class = "btn btn-primary", @data_loading_text = "<i class='fa fa-circle-o-notch fa-spin'></i> Processing..." });
+                                    <button type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing..." data-form-action="/CompleteRegistration" class="btn btn-success">Complete Registration</button>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
